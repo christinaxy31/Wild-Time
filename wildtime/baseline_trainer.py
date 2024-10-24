@@ -3,8 +3,8 @@ import torch
 import torch.nn as nn
 import random
 
-from wildtime.networks.article import ArticleNetwork
-from wildtime.networks.drug import DTI_Encoder, DTI_Classifier
+from networks.article import ArticleNetwork
+from networks.drug import DTI_Encoder, DTI_Classifier
 from wildtime.networks.fmow import FMoWNetwork
 from wildtime.networks.mimic import Transformer
 from wildtime.networks.yearbook import YearbookNetwork
