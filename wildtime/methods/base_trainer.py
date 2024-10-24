@@ -87,7 +87,7 @@ class BaseTrainer:
 
     def train_online(self):
         for i, timestamp in enumerate(self.train_dataset.ENV[:-1]):
-            if self.args.eval_fix and timestamp == self.split_time:
+            if self.args.offline and timestamp == self.split_time:
                 break
             if self.args.load_model and self.model_path_exists(timestamp):
                 self.load_model(timestamp)
