@@ -312,7 +312,7 @@ class BaseTrainer:
         start_time = time.time()
         if self.args.difficulty:
             self.run_task_difficulty()
-        elif self.args.eval_fix:
+        elif self.args.offline:
             self.run_eval_fix()
         else:
             self.run_eval_stream()
