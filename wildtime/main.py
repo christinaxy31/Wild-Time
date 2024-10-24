@@ -8,17 +8,17 @@ from torch import cuda
 
 from baseline_trainer import trainer_init
 from config import config
-from methods.agem.agem import AGEM
-from methods.coral.coral import DeepCORAL
-from methods.erm.erm import ERM
-from methods.ewc.ewc import EWC
-from methods.ft.ft import FT
-from methods.groupdro.groupdro import GroupDRO
-from methods.irm.irm import IRM
-from methods.si.si import SI
-from methods.simclr.simclr import SimCLR
-from methods.swa.swa import SWA
-from methods.swav.swav import SwaV
+from wildtime.methods.agem.agem import AGEM
+from wildtime.methods.coral.coral import DeepCORAL
+from wildtime.methods.erm.erm import ERM
+from wildtime.methods.ewc.ewc import EWC
+from wildtime.methods.ft.ft import FT
+from wildtime.methods.groupdro.groupdro import GroupDRO
+from wildtime.methods.irm.irm import IRM
+from wildtime.methods.si.si import SI
+from wildtime.methods.simclr.simclr import SimCLR
+from wildtime.methods.swa.swa import SWA
+from wildtime.methods.swav.swav import SwaV
 
 device = 'cuda' if cuda.is_available() else 'cpu'
 
