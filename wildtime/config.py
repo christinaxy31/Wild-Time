@@ -10,7 +10,7 @@ config = {
     'lr': 0.01,  # 'the base learning rate of the generator'
     'momentum': 0.9,  # 'momentum'
     'weight_decay': 0.0,  # 'weight decay'
-    'mini_batch_size': 8,  # 'mini batch size for SGD'
+    'mini_batch_size': 4,  # 'mini batch size for SGD'
     'reduced_train_prop': None,  # 'proportion of samples allocated to train at each time step'
     'reduction': 'mean',
 
