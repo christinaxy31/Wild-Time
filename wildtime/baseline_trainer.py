@@ -18,8 +18,8 @@ from methods.groupdro.groupdro import GroupDRO
 from methods.irm.irm import IRM
 from methods.si.si import SI
 from methods.simclr.simclr import SimCLR
-from methods.swa.swa import SWA
-from methods.swav.swav import SwaV
+#from methods.swa.swa import SWA
+#from methods.swav.swav import SwaV
 
 scheduler = None
 group_datasets = ['coral', 'groupdro', 'irm']
