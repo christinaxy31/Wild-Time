@@ -97,7 +97,7 @@ def _mimic_init(args):
 
 def _arxiv_init(args):
     if args.method in group_datasets:
-        from .data.arxiv import ArXivGroup
+        from wildtime.data.arxiv import ArXivGroup
         dataset = ArXivGroup(args)
     else:
         from wildtime.data.arxiv import ArXiv
