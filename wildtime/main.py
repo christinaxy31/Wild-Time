@@ -17,8 +17,8 @@ from wildtime.methods.groupdro.groupdro import GroupDRO
 from wildtime.methods.irm.irm import IRM
 from wildtime.methods.si.si import SI
 from wildtime.methods.simclr.simclr import SimCLR
-from wildtime.methods.swa.swa import SWA
-from wildtime.methods.swav.swav import SwaV
+#from wildtime.methods.swa.swa import SWA
+#from wildtime.methods.swav.swav import SwaV
 
 device = 'cuda' if cuda.is_available() else 'cpu'
 
