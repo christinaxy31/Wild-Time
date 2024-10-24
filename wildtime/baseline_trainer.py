@@ -3,23 +3,23 @@ import torch
 import torch.nn as nn
 import random
 
-from .networks.article import ArticleNetwork
-from .networks.drug import DTI_Encoder, DTI_Classifier
-from .networks.fmow import FMoWNetwork
-from .networks.mimic import Transformer
-from .networks.yearbook import YearbookNetwork
+from wildtime.networks.article import ArticleNetwork
+from wildtime.networks.drug import DTI_Encoder, DTI_Classifier
+from wildtime.networks.fmow import FMoWNetwork
+from wildtime.networks.mimic import Transformer
+from wildtime.networks.yearbook import YearbookNetwork
 from functools import partial
-from .methods.agem.agem import AGEM
-from .methods.coral.coral import DeepCORAL
-from .methods.erm.erm import ERM
-from .methods.ewc.ewc import EWC
-from .methods.ft.ft import FT
-from .methods.groupdro.groupdro import GroupDRO
-from .methods.irm.irm import IRM
-from .methods.si.si import SI
-from .methods.simclr.simclr import SimCLR
-from .methods.swa.swa import SWA
-from .methods.swav.swav import SwaV
+from wildtime.methods.agem.agem import AGEM
+from wildtime.methods.coral.coral import DeepCORAL
+from wildtime.methods.erm.erm import ERM
+from wildtime.methods.ewc.ewc import EWC
+from wildtime.methods.ft.ft import FT
+from wildtime.methods.groupdro.groupdro import GroupDRO
+from wildtime.methods.irm.irm import IRM
+from wildtime.methods.si.si import SI
+from wildtime.methods.simclr.simclr import SimCLR
+from wildtime.methods.swa.swa import SWA
+from wildtime.methods.swav.swav import SwaV
 
 scheduler = None
 group_datasets = ['coral', 'groupdro', 'irm']
@@ -28,10 +28,10 @@ print = partial(print, flush=True)
 
 def _yearbook_init(args):
     if args.method in group_datasets:
-        from .data.yearbook import YearbookGroup
+        from wildtime.data.yearbook import YearbookGroup
         dataset = YearbookGroup(args)
     else:
-        from .data.yearbook import Yearbook
+        from wildtime.data.yearbook import Yearbook
         dataset = Yearbook(args)
 
     scheduler = None
@@ -43,10 +43,10 @@ def _yearbook_init(args):
 
 def _fmow_init(args):
     if args.method in group_datasets:
-        from .data.fmow import FMoWGroup
+        from wildtime.data.fmow import FMoWGroup
         dataset = FMoWGroup(args)
     else:
-        from .data.fmow import FMoW
+        from wildtime.data.fmow import FMoW
         dataset = FMoW(args)
 
     criterion = nn.CrossEntropyLoss(reduction=args.reduction).cuda()
@@ -59,10 +59,10 @@ def _fmow_init(args):
 
 def _drug_init(args):
     if args.method in group_datasets:
-        from .data.drug import TdcDtiDgGroup
+        from wildtime.data.drug import TdcDtiDgGroup
         dataset = TdcDtiDgGroup(args)
     else:
-        from .data.drug import TdcDtiDg
+        from wildtime.data.drug import TdcDtiDg
         dataset = TdcDtiDg(args)
 
     scheduler = None
@@ -75,10 +75,10 @@ def _drug_init(args):
 
 def _mimic_init(args):
     if args.method in group_datasets:
-        from .data.mimic import MIMICGroup
+        from wildtime.data.mimic import MIMICGroup
         dataset = MIMICGroup(args)
     else:
-        from .data.mimic import MIMIC
+        from wildtime.data.mimic import MIMIC
         dataset = MIMIC(args)
 
     scheduler = None
@@ -100,7 +100,7 @@ def _arxiv_init(args):
         from .data.arxiv import ArXivGroup
         dataset = ArXivGroup(args)
     else:
-        from .data.arxiv import ArXiv
+        from wildtime.data.arxiv import ArXiv
         dataset = ArXiv(args)
     scheduler = None
     criterion = nn.CrossEntropyLoss(reduction=args.reduction).cuda()
@@ -113,7 +113,7 @@ def _huffpost_init(args):
         from .data.huffpost import HuffPostGroup
         dataset = HuffPostGroup(args)
     else:
-        from .data.huffpost import HuffPost
+        from wildtime.data.huffpost import HuffPost
         dataset = HuffPost(args)
     scheduler = None
     criterion = nn.CrossEntropyLoss(reduction=args.reduction).cuda()
