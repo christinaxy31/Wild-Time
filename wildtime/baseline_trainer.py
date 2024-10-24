@@ -5,21 +5,21 @@ import random
 
 from networks.article import ArticleNetwork
 from networks.drug import DTI_Encoder, DTI_Classifier
-from wildtime.networks.fmow import FMoWNetwork
-from wildtime.networks.mimic import Transformer
-from wildtime.networks.yearbook import YearbookNetwork
+from networks.fmow import FMoWNetwork
+from networks.mimic import Transformer
+from networks.yearbook import YearbookNetwork
 from functools import partial
-from wildtime.methods.agem.agem import AGEM
-from wildtime.methods.coral.coral import DeepCORAL
-from wildtime.methods.erm.erm import ERM
-from wildtime.methods.ewc.ewc import EWC
-from wildtime.methods.ft.ft import FT
-from wildtime.methods.groupdro.groupdro import GroupDRO
-from wildtime.methods.irm.irm import IRM
-from wildtime.methods.si.si import SI
-from wildtime.methods.simclr.simclr import SimCLR
-from wildtime.methods.swa.swa import SWA
-from wildtime.methods.swav.swav import SwaV
+from methods.agem.agem import AGEM
+from methods.coral.coral import DeepCORAL
+from methods.erm.erm import ERM
+from methods.ewc.ewc import EWC
+from methods.ft.ft import FT
+from methods.groupdro.groupdro import GroupDRO
+from methods.irm.irm import IRM
+from methods.si.si import SI
+from methods.simclr.simclr import SimCLR
+from methods.swa.swa import SWA
+from methods.swav.swav import SwaV
 
 scheduler = None
 group_datasets = ['coral', 'groupdro', 'irm']
