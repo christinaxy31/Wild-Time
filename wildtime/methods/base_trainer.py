@@ -63,7 +63,7 @@ class BaseTrainer:
             base_trainer_str += f'-mixup-mix_alpha={self.mix_alpha}'
         if self.cut_mix:
             base_trainer_str += f'-cut_mix'
-        if self.args.eval_fix:
+        if self.args.offline:
             base_trainer_str += f'-eval_fix'
         else:
             base_trainer_str += f'-eval_stream'
