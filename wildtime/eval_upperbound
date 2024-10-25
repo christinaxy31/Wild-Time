@@ -1,3 +1,58 @@
+import argparse
+import os
+import random
+
+import numpy as np
+import torch
+from torch import cuda
+
+from baseline_trainer import trainer_init
+from config import config
+from wildtime.methods.agem.agem import AGEM
+from wildtime.methods.coral.coral import DeepCORAL
+from wildtime.methods.erm.erm import ERM
+from wildtime.methods.ewc.ewc import EWC
+from wildtime.methods.ft.ft import FT
+from wildtime.methods.groupdro.groupdro import GroupDRO
+from wildtime.methods.irm.irm import IRM
+from wildtime.methods.si.si import SI
+from wildtime.methods.simclr.simclr import SimCLR
+#from wildtime.methods.swa.swa import SWA
+#from wildtime.methods.swav.swav import SwaV
+
+device = 'cuda' if cuda.is_available() else 'cpu'
+
+
+if __name__ == '__main__':
+    configs = argparse.Namespace(**config)
+    print(configs)
+
+    random.seed(configs.random_seed)
+    np.random.seed(configs.random_seed)
+    torch.cuda.manual_seed(configs.random_seed)
+    torch.manual_seed(configs.random_seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    torch.cuda.empty_cache()
+
+    if not os.path.isdir(configs.data_dir):
+        raise ValueError(f'Data directory {configs.data_dir} does not exist!')
+    if configs.load_model and not os.path.isdir(configs.log_dir):
+        raise ValueError(f'Model checkpoint directory {configs.log_dir} does not exist!')
+    if not os.path.isdir(configs.results_dir):
+        raise ValueError(f'Results directory {configs.results_dir} does not exist!')
+
+    if configs.method in ['groupdro', 'irm']:
+        configs.reduction = 'none'
+
+
+import dataloader
+data = dataloader.getdata(configs)
+
+
+
+
+'''
 # Import necessary libraries
 import torch
 from torch.utils.data import DataLoader, random_split
@@ -79,3 +134,5 @@ df = pd.DataFrame(performance_records)
 
 # Print performance table
 print(df)
+
+'''
