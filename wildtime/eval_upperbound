@@ -1,0 +1,81 @@
+# Import necessary libraries
+import torch
+from torch.utils.data import DataLoader, random_split
+from some_dataset_module import YourDataset  # Replace with the actual dataset
+from torch.optim.swa_utils import AveragedModel, SWALR
+import pandas as pd
+
+# Step 1: Download and load the dataset
+dataset = YourDataset(download=True)  # Load dataset
+
+# Step 2: Randomly select 50% of test data
+# Set random seed for reproducibility
+torch.manual_seed(42)
+
+# Define 50% split
+test_size = int(0.5 * len(dataset))
+remaining_size = len(dataset) - test_size
+
+# Randomly split the dataset
+new_test_data, _ = random_split(dataset, [test_size, remaining_size])
+
+# Step 3: Incremental data update and model training
+# Split the new test data into "stored" and "incremental" parts
+store_size = int(0.5 * len(new_test_data))
+increment_size = len(new_test_data) - store_size
+stored_data, increment_data = random_split(new_test_data, [store_size, increment_size])
+
+# Use DataLoader to process data
+store_loader = DataLoader(stored_data, batch_size=32, shuffle=False)
+increment_loader = DataLoader(increment_data, batch_size=32, shuffle=True)
+
+# Initialize the model and SWA optimizer
+model = YourModel()  # Replace with the actual model
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+swa_model = AveragedModel(model)
+scheduler = SWALR(optimizer, swa_lr=0.05)
+
+# Define training and update functions
+def train_model(model, data_loader):
+    model.train()
+    for data, target in data_loader:
+        optimizer.zero_grad()
+        output = model(data)
+        loss = torch.nn.functional.cross_entropy(output, target)
+        loss.backward()
+        optimizer.step()
+
+def update_swa(swa_model, model):
+    swa_model.update_parameters(model)
+    scheduler.step()
+
+# Step 4: Gradually add test data to update the model and evaluate performance upper bound
+from some_evaluation_module import evaluate_performance  # Replace with the actual evaluation module
+
+# Initial evaluation
+current_performance = evaluate_performance(model, store_loader)
+
+# Incremental data iteration
+threshold = 0.01  # Threshold for performance improvement
+for batch in increment_loader:
+    # Update model with a small amount of incremental data
+    train_model(model, [batch])
+    update_swa(swa_model, model)  # Update incrementally using SWA
+    
+    # Re-evaluate model performance
+    new_performance = evaluate_performance(model, store_loader)
+    print(f"New Performance: {new_performance}")
+
+    # Check if performance improvement is below threshold
+    if new_performance - current_performance < threshold:  # Set a threshold
+        print("Model has reached its performance upper bound.")
+        break
+    current_performance = new_performance
+
+# Step 5: Record and analyze performance upper bound
+# Assuming recorded performance
+performance_records = {"method": ["SWA", "ERM"], "upper_bound_performance": [new_performance, current_performance]}
+df = pd.DataFrame(performance_records)
+
+# Print performance table
+print(df)
