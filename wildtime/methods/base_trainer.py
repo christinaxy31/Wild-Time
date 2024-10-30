@@ -122,8 +122,8 @@ class BaseTrainer:
                 ood_length = self.train_dataset.ENV[-1] - timestamp #1970-2013
                 start_time = timestamp #1970
                 incremental_train_intervals = []
-                ood_test_length = ood_length // 2
                 ood_train_length = ood_length // 2
+                ood_test_length = ood_length - ood_train_length
                 interval_length = ood_test_length // 5
                 ood_train_start = self.train_dataset.ENV[0]
                 end_time = start_time + ood_train_length
