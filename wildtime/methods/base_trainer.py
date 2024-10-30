@@ -123,10 +123,11 @@ class BaseTrainer:
                 start_time = timestamp #1970
                 incremental_train_intervals = []
                 interval_length = ood_length // 5
-                ood_train_start = start_time + ood_length // 2
-                end_time = ood_train_start
+                ood_train_start = self.train_dataset.ENV[0]
+                end_time = start_time + ood_length // 2
+                
                 while end_time < self.train_dataset.ENV[-1]:
-                    end_time = min(ood_train_start + interval_length, self.train_dataset.ENV[-1])
+                    end_time = min(end_time + interval_length, self.train_dataset.ENV[-1])
                     self.end_times.append(end_time)
                     incremental_train_interval = [ood_train_start, end_time] 
                     print(incremental_train_interval)
