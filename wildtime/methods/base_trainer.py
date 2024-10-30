@@ -129,8 +129,10 @@ class BaseTrainer:
                     end_time = min(ood_train_start + interval_length, self.train_dataset.ENV[-1])
                     self.end_times.append(end_time)
                     incremental_train_interval = [ood_train_start, end_time] 
+                    print(incremental_train_interval)
                     incremental_train_intervals.append(incremental_train_interval)
                     interval_length += ood_length // 5
+                    
                 print("end times:", self.end_times)
                     
                 self.train_dataset.mode = 0
