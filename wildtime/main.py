@@ -49,7 +49,7 @@ if __name__ == '__main__':
     for key, value in vars(args).items():
         if value is not None:  # Only override non-None command line arguments
             setattr(configs, key, value)
-
+    print(configs)
     # 4. Set random seed
     random.seed(configs.random_seed)
     np.random.seed(configs.random_seed)
