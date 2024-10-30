@@ -125,7 +125,9 @@ class BaseTrainer:
                 interval_length = ood_length // 5
                 ood_train_start = self.train_dataset.ENV[0]
                 end_time = start_time + ood_length // 2
-                
+                print("start time:", start_time)
+                print("ood length:", self.ood_length)
+                print("ood train start:", ood_train_start)
                 while end_time < self.train_dataset.ENV[-1]:
                     end_time = min(end_time + interval_length, self.train_dataset.ENV[-1])
                     self.end_times.append(end_time)
