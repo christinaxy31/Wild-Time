@@ -149,9 +149,9 @@ class YearbookBase(Dataset):
         self.mode = 0
         self.ssl_training = False
 
-        self.ENV = list(sorted(self.datasets.keys()))
-        self.num_tasks = len(self.ENV)
-        self.num_examples = {i: len(self.datasets[i][self.mode]['labels']) for i in self.ENV}
+        self.ENV = list(sorted(self.datasets.keys())) #1930-2013
+        self.num_tasks = len(self.ENV) #84
+        self.num_examples = {i: len(self.datasets[i][self.mode]['labels']) for i in self.ENV} #for each year, number of train/test/all examples
 
         ## create a datasets object
         self.class_id_list = {i: {} for i in range(self.num_classes)}
