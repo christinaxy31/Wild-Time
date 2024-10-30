@@ -134,7 +134,7 @@ class BaseTrainer:
                 print("end times:", self.end_times)
                     
                 self.train_dataset.mode = 0
-                self.train_dataset.update_current_timestamp(end_times[2])
+                self.train_dataset.update_current_timestamp(self.end_times[2])
                 if self.args.method in ['simclr', 'swav']:
                     self.train_dataset.ssl_training = True
                 train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
