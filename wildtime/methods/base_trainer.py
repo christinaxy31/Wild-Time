@@ -28,7 +28,7 @@ class BaseTrainer:
         self.num_tasks = dataset.num_tasks
         self.train_collate_fn, self.eval_collate_fn = get_collate_functions(args, self.train_dataset)
 
-        self.
+        self.end_times = []
         
 
         # Training hyperparameters
@@ -119,20 +119,19 @@ class BaseTrainer:
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1, data_del=True)
             elif timestamp == self.split_time: #1970
-                OOD_HELD_OUT = 0.5
                 ood_length = self.train_dataset.ENV[-1] - timestamp + 1 #1970-2013
                 start_time = timestamp #1970
                 incremental_train_intervals = []
                 interval_length = OOD_length // 5
                 OOD_test_start = start_time + OOD_length // 2
-                end_times = []
+                
                 while end_time < self.train_dataset.ENV[-1]:
                     end_time = min(OOD_test_start + interval_length, self.train_dataset.ENV[-1])
-                    end_times.append(end_time)
+                    self.end_times.append(end_time)
                     incremental_train_interval = [start_time, end_time] 
                     incremental_train_intervals.append(incremental_test_interval)
                     interval_length += OOD_length // 5
-                print("end times:", end_times)
+                print("end times:", self.end_times)
                     
                 self.train_dataset.mode = 0
                 self.train_dataset.update_current_timestamp(end_times[2])
@@ -223,11 +222,11 @@ class BaseTrainer:
         timestamps = self.eval_dataset.ENV
         metrics = []
         for i, timestamp in enumerate(timestamps):
-            if timestamp < self.split_time:
+            if timestamp < self.end_times[2]:
                 self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
                 self.eval_dataset.update_historical(i + 1, data_del=True)
-            elif timestamp == self.split_time:
+            elif timestamp == self.end_times[2]:
                 self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
                 test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
