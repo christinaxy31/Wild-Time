@@ -89,7 +89,7 @@ def preprocess_orig(args):
 
     dataset = {}
     for year in sorted(list(year_counts.keys())):
-        # Ignore years 1905 - 1929, start at 1930
+        # Ignore years 1905 - 1929, in yearbook.pkl: start from 1930 to 2013; for each year, use 0.9/0.1
         if year < 1930:
             del year_counts[year]
             continue
