@@ -115,9 +115,24 @@ class BaseTrainer:
                 self.train_dataset.mode = 1
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1, data_del=True)
-            elif timestamp == self.split_time:
+            elif timestamp == self.split_time: #1970
+                OOD_HELD_OUT = 0.5
+                OOD_length = self.train_dataset.ENV[-1] - timestamp + 1 #1970-2013
+                start_time = timestamp #1970
+                incremental_train_intervals = []
+                interval_length = OOD_length // 5
+                OOD_test_start = start_time + OOD_length // 2
+                end_times = []
+                while end_time < self.train_dataset.ENV[-1]:
+                    end_time = min(OOD_test_start + interval_length, self.train_dataset.ENV[-1])
+                    end_times.append(end_time)
+                    incremental_train_interval = [start_time, end_time] 
+                    incremental_train_intervals.append(incremental_test_interval)
+                    interval_length += OOD_length // 5
+                print("end times:", end_times)
+                    
                 self.train_dataset.mode = 0
-                self.train_dataset.update_current_timestamp(timestamp)
+                self.train_dataset.update_current_timestamp(end_times[2])
                 if self.args.method in ['simclr', 'swav']:
                     self.train_dataset.ssl_training = True
                 train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
