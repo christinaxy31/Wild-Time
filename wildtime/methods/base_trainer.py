@@ -28,6 +28,9 @@ class BaseTrainer:
         self.num_tasks = dataset.num_tasks
         self.train_collate_fn, self.eval_collate_fn = get_collate_functions(args, self.train_dataset)
 
+        self.
+        
+
         # Training hyperparameters
         self.args = args
         self.train_update_iter = args.train_update_iter
@@ -117,7 +120,7 @@ class BaseTrainer:
                 self.train_dataset.update_historical(i + 1, data_del=True)
             elif timestamp == self.split_time: #1970
                 OOD_HELD_OUT = 0.5
-                OOD_length = self.train_dataset.ENV[-1] - timestamp + 1 #1970-2013
+                ood_length = self.train_dataset.ENV[-1] - timestamp + 1 #1970-2013
                 start_time = timestamp #1970
                 incremental_train_intervals = []
                 interval_length = OOD_length // 5
