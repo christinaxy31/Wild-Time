@@ -119,7 +119,7 @@ class BaseTrainer:
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1, data_del=True)
             elif timestamp == self.split_time: #1970
-                ood_length = timestamp, self.train_dataset.ENV[-1] - timestamp + 1 #1970-2013
+                ood_length = self.train_dataset.ENV[-1] - timestamp + 1 #1970-2013
                 start_time = timestamp #1970
                 incremental_train_intervals = []
                 interval_length = ood_length // 5
