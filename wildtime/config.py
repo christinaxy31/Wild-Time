@@ -19,7 +19,7 @@ config = {
     'prediction_type': 'mortality',  # help='MIMIC: "mortality" or "readmission"')
 
     # Evaluation
-    'offline': Ture,  # help='evaluate offline at a single time step split'
+    'offline': True,  # help='evaluate offline at a single time step split'
     'difficulty': False,  # 'task difficulty'
     # todo: set value of split_time
     'split_time': 0,  # 'timestep to split ID vs OOD' #
