@@ -44,11 +44,13 @@ if __name__ == '__main__':
     parser.add_argument('--results_dir', type=str, help='Results directory')
     parser.add_argument('--load_model', action='store_true', help='Load model from checkpoint')
 
+    '''
     # 3. Override default configuration with command line arguments
     args = parser.parse_args()
     for key, value in vars(args).items():
         if value is not None:  # Only override non-None command line arguments
             setattr(configs, key, value)
+    '''
     print(configs)
     # 4. Set random seed
     random.seed(configs.random_seed)
