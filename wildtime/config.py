@@ -22,7 +22,7 @@ config = {
     'offline': True,  # help='evaluate offline at a single time step split'
     'difficulty': False,  # 'task difficulty'
     # todo: set value of split_time
-    'split_time': 0,  # 'timestep to split ID vs OOD' #
+    'split_time': 1970,  # 'timestep to split ID vs OOD' #
     'eval_next_timesteps': 1,  # 'number of future timesteps to evaluate on'
     'eval_worst_time': False,  # 'evaluate worst timestep accuracy'
     'load_model': False,  # 'load trained model for evaluation only'
