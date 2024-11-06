@@ -271,7 +271,7 @@ class BaseTrainer:
     def evaluate_all_models_on_fixed_test_set(self, timestamps, test_time_dataloader):
         metrics = {}
         for timestamp in timestamps:
-            model_path = f"./checkpoints/yearbook_ERM-train_update_iter=3000-lr=0.001-mini_batch_size=32-seed=1-eval_fix_time={timestamp}..."
+            model_path = f"./checkpoints/yearbook_ERM-train_update_iter=3000-lr=0.001-mini_batch_size=32-seed=1-eval_fix_time={timestamp}"
             self.load_model_from_path(model_path)
             metric = self.network_evaluation(test_time_dataloader)
             print(f"Evaluation for model saved at timestamp {timestamp}: {self.eval_metric} = {metric}")
