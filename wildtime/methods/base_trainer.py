@@ -111,7 +111,7 @@ class BaseTrainer:
         print("last_year:",last_year,"split_year:",split_year,"mid_year:",mid_year)
         
         if self.args.method in ['simclr', 'swav']:
-        self.train_dataset.ssl_training = True
+            self.train_dataset.ssl_training = True
 
         for i, timestamp in enumerate(self.train_dataset.ENV):
             if timestamp < self.split_time:
