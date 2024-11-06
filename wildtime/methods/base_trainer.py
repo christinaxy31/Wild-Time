@@ -210,11 +210,11 @@ class BaseTrainer:
         timestamps = self.eval_dataset.ENV
         metrics = []
         for i, timestamp in enumerate(timestamps):
-            if timestamp < self.split_time:
+            if timestamp < mid_year:
                 self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
                 self.eval_dataset.update_historical(i + 1, data_del=True)
-            elif timestamp == self.split_time:
+            elif timestamp == mid_year:
                 self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
                 test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
