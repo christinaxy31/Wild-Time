@@ -140,7 +140,7 @@ class BaseTrainer:
                     self.train_step(train_id_dataloader)
                     self.save_model(timestamp)
                     self.saved_timestamps.append(timestamp)
-                break
+            
 
             elif self.split_time < timestamp < self.mid_year and (timestamp - self.split_time) % 5 == 0:
                 self.train_dataset.mode = 0  
