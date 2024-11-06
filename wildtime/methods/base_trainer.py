@@ -107,15 +107,18 @@ class BaseTrainer:
     def train_offline(self):
         if self.args.method in ['simclr', 'swav']:
             self.train_dataset.ssl_training = True
+        last_year = self.eval_dataset.ENV[-1]
+        split_year = self.split_time
+        mid_year = (last_year + split_year) // 2
         for i, timestamp in enumerate(self.train_dataset.ENV):
-            if timestamp < self.split_time:
+            if timestamp < mid_year:
                 self.train_dataset.mode = 0
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1)
                 self.train_dataset.mode = 1
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1, data_del=True)
-            elif timestamp == self.split_time:
+            elif timestamp == mid_year:
                 self.train_dataset.mode = 0
                 self.train_dataset.update_current_timestamp(timestamp)
                 if self.args.method in ['simclr', 'swav']:
