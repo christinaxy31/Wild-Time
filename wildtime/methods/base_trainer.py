@@ -110,7 +110,7 @@ class BaseTrainer:
         last_year = self.eval_dataset.ENV[-1]
         split_year = self.split_time
         mid_year = (last_year + split_year) // 2
-        print("last_year:",last_year,"split_year":split_year,"mid_year":mid_year)
+        print("last_year:",last_year,"split_year:",split_year,"mid_year:",mid_year)
         print("self.train_dataset.ENV:",self.train_dataset.ENV)
         for i, timestamp in enumerate(self.train_dataset.ENV):
             if timestamp < mid_year:
