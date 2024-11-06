@@ -280,7 +280,7 @@ class BaseTrainer:
         print("\nSummary of Evaluations on 1990+ Test Set:")
         for timestamp, metric in metrics.items():
             print(f"Timestamp {timestamp}: {self.eval_metric} = {metric}")
-            print(f'\nOOD Average Metric: \t{np.mean(metrics.values()}'
+        print(f'\nOOD Average Metric: \t{np.mean(metrics.values()}'
               f'\nOOD Worst Metric: \t{np.min(metrics.values()}'
               f'\nAll OOD Metrics: \t{metrics}\n')
         
