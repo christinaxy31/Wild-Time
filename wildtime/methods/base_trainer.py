@@ -105,22 +105,23 @@ class BaseTrainer:
                     self.train_dataset.update_historical(i + 1, data_del=True)
 
     def train_offline(self):
-        if self.args.method in ['simclr', 'swav']:
-            self.train_dataset.ssl_training = True
         last_year = self.eval_dataset.ENV[-1]
         split_year = self.split_time
         mid_year = (last_year + split_year) // 2
         print("last_year:",last_year,"split_year:",split_year,"mid_year:",mid_year)
-        print("self.train_dataset.ENV:",self.train_dataset.ENV)
+        
+        if self.args.method in ['simclr', 'swav']:
+        self.train_dataset.ssl_training = True
+
         for i, timestamp in enumerate(self.train_dataset.ENV):
-            if timestamp < mid_year:
-                self.train_dataset.mode = 0
+            if timestamp < self.split_time:
+                self.train_dataset.mode = 0  
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1)
-                self.train_dataset.mode = 1
+                self.train_dataset.mode = 1  
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1, data_del=True)
-            elif timestamp == mid_year:
+            elif timestamp == self.split_time:
                 self.train_dataset.mode = 0
                 self.train_dataset.update_current_timestamp(timestamp)
                 if self.args.method in ['simclr', 'swav']:
@@ -134,6 +135,23 @@ class BaseTrainer:
                     self.train_step(train_id_dataloader)
                     self.save_model(timestamp)
                 break
+
+        for i, timestamp in enumerate(self.train_dataset.ENV):
+            if self.split_time <= timestamp < last_year and (timestamp - self.split_time) % 5 == 0:
+                self.train_dataset.mode = 0  
+                self.train_dataset.update_current_timestamp(timestamp)
+                self.train_dataset.update_historical(i + 1)
+    
+                
+                train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
+                                                         batch_size=self.mini_batch_size,
+                                                         num_workers=self.num_workers, collate_fn=self.train_collate_fn)
+                self.train_step(train_id_dataloader)
+                self.save_model(timestamp)
+    
+                self.train_dataset.mode = 1
+                self.train_dataset.update_current_timestamp(timestamp)
+                self.train_dataset.update_historical(i + 1, data_del=True)
 
     def network_evaluation(self, test_time_dataloader):
         self.network.eval()
