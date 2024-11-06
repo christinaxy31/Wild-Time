@@ -176,13 +176,25 @@ class YearbookBase(Dataset):
             else:
                 self.input_dim.append((min(self.mini_batch_size, self.num_examples[i]), 3, 32, 32))
 
-    def update_historical(self, idx, data_del=False):
+    def update_historical(self, idx, data_del=False, incremental_update = False):
         time = self.ENV[idx]
-        prev_time = self.ENV[idx - 1]
-        self.datasets[time][self.mode]['images'] = np.concatenate(
+        if not incremenral_update:
+            prev_time = self.ENV[idx - 1]
+            self.datasets[time][self.mode]['images'] = np.concatenate(
             (self.datasets[time][self.mode]['images'], self.datasets[prev_time][self.mode]['images']), axis=0)
-        self.datasets[time][self.mode]['labels'] = np.concatenate(
+            self.datasets[time][self.mode]['labels'] = np.concatenate(
             (self.datasets[time][self.mode]['labels'], self.datasets[prev_time][self.mode]['labels']), axis=0)
+        else:
+            self.datasets[time][self.mode]['images'] = np.concatenate(
+            (self.datasets[time][self.mode]['images'], 
+             self.datasets[prev_time][self.mode]['images'], 
+             self.datasets[self.ENV[40]][self.mode]['images']), axis=0)
+
+            self.datasets[time][self.mode]['labels'] = np.concatenate(
+            (self.datasets[time][self.mode]['labels'], 
+             self.datasets[prev_time][self.mode]['labels'], 
+             self.datasets[self.ENV[40]][self.mode]['labels']), axis=0)
+
         if data_del:
             del self.datasets[prev_time]
         for classid in range(self.num_classes):
