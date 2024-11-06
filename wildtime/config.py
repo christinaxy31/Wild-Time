@@ -7,7 +7,7 @@ config = {
 
     # Training hyperparameters
     'train_update_iter': 10,  # 'train update iter'
-    'lr': 0.01,  # 'the base learning rate of the generator'
+    'lr': 0.1,  # 'the base learning rate of the generator'
     'momentum': 0.9,  # 'momentum'
     'weight_decay': 0.0,  # 'weight decay'
     'mini_batch_size': 32,  # 'mini batch size for SGD'
@@ -56,7 +56,7 @@ config = {
     'buffer_size': 100,  # 'buffer size for A-GEM'
 
     # CORAL
-    'coral_lambda': 1.0,  # 'how strong to weigh CORAL loss'
+    'coral_lambda': 0.9,  # 'how strong to weigh CORAL loss'
 
     # IRM
     'irm_lambda': 1.0,  # 'how strong to weigh IRM penalty loss'
