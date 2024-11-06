@@ -105,6 +105,7 @@ class BaseTrainer:
                                                       num_workers=self.num_workers, collate_fn=self.train_collate_fn)
                 self.train_step(train_dataloader)
                 self.save_model(timestamp)
+                
                 if self.args.method in ['coral', 'groupdro', 'irm', 'erm']:
                     self.train_dataset.update_historical(i + 1, data_del=True)
 
@@ -386,7 +387,7 @@ class BaseTrainer:
 
     def save_model(self, timestamp):
         path = self.get_model_path(timestamp)
-        torch.save(self.network.state_dict(), path)
+        torch.save({'model_state_dict': self.network.state_dict()}, path)
         print(f'Saving model at timestamp {timestamp} to path {path}...\n')
 
     def load_model(self, timestamp):
