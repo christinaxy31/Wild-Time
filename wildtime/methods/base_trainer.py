@@ -137,7 +137,7 @@ class BaseTrainer:
                 break
 
         for i, timestamp in enumerate(self.train_dataset.ENV):
-            if self.split_time <= timestamp < last_year and (timestamp - self.split_time) % 5 == 0:
+            if self.split_time <= timestamp < self.last_year and (timestamp - self.split_time) % 5 == 0:
                 self.train_dataset.mode = 0  
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1)
