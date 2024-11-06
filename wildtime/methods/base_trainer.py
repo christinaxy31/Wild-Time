@@ -142,8 +142,7 @@ class BaseTrainer:
                     self.saved_timestamps.append(timestamp)
                 break
 
-        for i, timestamp in enumerate(self.train_dataset.ENV):
-            if self.split_time < timestamp < self.mid_year and (timestamp - self.split_time) % 5 == 0:
+            elif self.split_time < timestamp < self.mid_year and (timestamp - self.split_time) % 5 == 0:
                 self.train_dataset.mode = 0  
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1, incremental_update = True)
