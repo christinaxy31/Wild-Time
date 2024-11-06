@@ -51,6 +51,9 @@ class BaseTrainer:
         elif 'mimic' in str(self.eval_dataset) and self.args.prediction_type == 'mortality':
             self.eval_metric = 'ROC-AUC'
 
+        self.last_year = self.eval_dataset.ENV[-1]
+        self.mid_year = (self.last_year + self.split_time) // 2
+
     def __str__(self):
         pass
 
@@ -105,10 +108,7 @@ class BaseTrainer:
                     self.train_dataset.update_historical(i + 1, data_del=True)
 
     def train_offline(self):
-        last_year = self.eval_dataset.ENV[-1]
-        split_year = self.split_time
-        mid_year = (last_year + split_year) // 2
-        print("last_year:",last_year,"split_year:",split_year,"mid_year:",mid_year)
+        print("last_year:",self.last_year,"split_year:",self.split_time,"mid_year:",self.mid_year)
         
         if self.args.method in ['simclr', 'swav']:
             self.train_dataset.ssl_training = True
@@ -228,11 +228,11 @@ class BaseTrainer:
         timestamps = self.eval_dataset.ENV
         metrics = []
         for i, timestamp in enumerate(timestamps):
-            if timestamp < mid_year:
+            if timestamp < self.mid_year:
                 self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
                 self.eval_dataset.update_historical(i + 1, data_del=True)
-            elif timestamp == mid_year:
+            elif timestamp == self.mid_year:
                 self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
                 test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
