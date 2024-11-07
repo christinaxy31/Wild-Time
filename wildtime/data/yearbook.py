@@ -272,6 +272,7 @@ class Yearbook(YearbookBase):
         return image_tensor, label_tensor
 
     def __len__(self):
+        print(self.datasets.keys())
         return len(self.datasets[self.current_time][self.mode]['labels'])
 
 
