@@ -141,6 +141,7 @@ class BaseTrainer:
                     self.save_model(timestamp)
                     self.saved_timestamps.append(timestamp)
             else:
+                print("i is",i)
                 self.train_dataset.mode = 0
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1)
