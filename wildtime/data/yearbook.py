@@ -273,6 +273,10 @@ class Yearbook(YearbookBase):
 
     def __len__(self):
         print(self.datasets.keys())
+        print(
+            f'mode = {self.mode}'
+            f'\t current_time = {self.current_time}'
+        )
         return len(self.datasets[self.current_time][self.mode]['labels'])
 
 
