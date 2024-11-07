@@ -141,6 +141,8 @@ class BaseTrainer:
                     self.save_model(timestamp)
                     self.saved_timestamps.append(timestamp)
             else:
+                if timestamp == self.mid_year:
+                    break
                 print("i is",i)
                 self.train_dataset.mode = 0
                 self.train_dataset.update_current_timestamp(timestamp)
@@ -153,8 +155,7 @@ class BaseTrainer:
                     self.save_model(timestamp)
                     self.saved_timestamps.append(timestamp)
 
-                    if timestamp == self.mid_year:
-                        break
+                    
                             
 
     def load_model_from_path(self, path):
