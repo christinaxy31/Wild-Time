@@ -113,11 +113,11 @@ def preprocess_orig(args):
         dataset[year][2]['images'] = np.stack(images[year], axis=0) / 255.0
         dataset[year][2]['labels'] = np.array(labels[year])
         dataset[year][3] = {}
-        dataset[year][3]['images'] = np.stack(train_images[year], axis=0) / 255.0
-        dataset[year][3]['labels'] = np.array(train_labels[year])
+        dataset[year][3]['images'] = np.stack(train_images, axis=0) / 255.0
+        dataset[year][3]['labels'] = np.array(train_labels)
         dataset[year][4] = {}
-        dataset[year][4]['images'] = np.stack(test_images[year], axis=0) / 255.0
-        dataset[year][4]['labels'] = np.array(test_labels[year])
+        dataset[year][4]['images'] = np.stack(test_images, axis=0) / 255.0
+        dataset[year][4]['labels'] = np.array(test_labels)
         dataset[year][5] = {}
         dataset[year][5]['images'] = np.stack(images[year], axis=0) / 255.0
         dataset[year][5]['labels'] = np.array(labels[year])
