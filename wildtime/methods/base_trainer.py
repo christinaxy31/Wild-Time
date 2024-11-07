@@ -253,7 +253,7 @@ class BaseTrainer:
             else:
                 self.eval_dataset.mode = 2
                 self.eval_dataset.update_current_timestamp(timestamp)
-                test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset[self.mid_year:],
+                test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
                                                      batch_size=self.mini_batch_size,
                                                      num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
                 #acc = self.network_evaluation(test_ood_dataloader)
