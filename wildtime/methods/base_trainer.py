@@ -143,8 +143,8 @@ class BaseTrainer:
             else:
                 if timestamp == self.mid_year:
                     break
-                print("i is",i)
-                self.train_dataset.mode = 0
+                    
+                self.train_dataset.mode = 3
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1)
                 if timestamp < self.mid_year and (timestamp - self.split_time) % 5 == 0:
@@ -238,20 +238,25 @@ class BaseTrainer:
         timestamps = self.eval_dataset.ENV
         metrics = []
         for i, timestamp in enumerate(timestamps):
-            if timestamp < self.mid_year:
+            if timestamp < self.split_time:
                 self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
                 self.eval_dataset.update_historical(i + 1, data_del=True)
+                
+            if self.split_time < timestamp < self.mid_year:
+                self.eval_dataset.mode = 4
+                self.eval_dataset.update_current_timestamp(timestamp)
+                self.eval_dataset.update_historical(i + 1, data_del=True)
             elif timestamp == self.mid_year:
-                self.eval_dataset.mode = 1
+                self.eval_dataset.mode = 4
                 self.eval_dataset.update_current_timestamp(timestamp)
                 test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
                                                     batch_size=self.mini_batch_size,
                                                     num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
                 id_metric = self.network_evaluation(test_id_dataloader)
                 print(f'ID {self.eval_metric}: \t{id_metric}\n')
-            else:
-                self.eval_dataset.mode = 2
+            else:    #after 1990
+                self.eval_dataset.mode = 5
                 self.eval_dataset.update_current_timestamp(timestamp)
                 test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
                                                      batch_size=self.mini_batch_size,
@@ -259,26 +264,30 @@ class BaseTrainer:
                 #acc = self.network_evaluation(test_ood_dataloader)
                 #print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
                 #metrics.append(acc)
-        acc = self.evaluate_all_models_on_fixed_test_set(self.saved_timestamps, test_ood_dataloader)
+                after_1990_accuracy = {}
+                after_1990_accuracy[timestamp] = all_trained_models_results
+                acc = self.evaluate_all_models_on_fixed_test_set(self.saved_timestamps, test_ood_dataloader)
         '''
         print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
               f'\nOOD Worst Metric: \t{np.min(metrics)}'
               f'\nAll OOD Metrics: \t{metrics}\n')
         '''
 
-    def evaluate_all_models_on_fixed_test_set(self, timestamps, test_time_dataloader):
+    def evaluate_all_models_on_fixed_test_set(self, timestamps, test_time_dataloader): #applied to each year after 1990(mode = 5)
         metrics = {}
-        for timestamp in timestamps:
+        for timestamp in timestamps: #each timestamp is a trained mpde;
             model_path = f"./checkpoints/yearbook_ERM-train_update_iter=3000-lr=0.001-mini_batch_size=32-seed=1-eval_fix_time={timestamp}"
             self.load_model_from_path(model_path)
             metric = self.network_evaluation(test_time_dataloader)
             print(f"Evaluation for model saved at timestamp {timestamp}: {self.eval_metric} = {metric}")
             metrics[timestamp] = metric
+            metrics['avg'] = np.mean(list(metrics.values()))
+            metrics['worst'] = np.min(list(metrics.values()))
+
         
-        print("\nSummary of Evaluations on 1990+ Test Set:")
-        for timestamp, metric in metrics.items():
+            print("\nSummary of different trained model evaluations on 1990+ Test Set on the current year:")
             print(f"Timestamp {timestamp}: {self.eval_metric} = {metric}")
-        print(f'\nOOD Average Metric: \t{np.mean(list(metrics.values()))}'
+            print(f'\nOOD Average Metric: \t{np.mean(list(metrics.values()))}'
               f'\nOOD Worst Metric: \t{np.min(list(metrics.values()))}'
               f'\nAll OOD Metrics: \t{metrics}\n')
         
