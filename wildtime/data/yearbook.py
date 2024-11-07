@@ -186,17 +186,13 @@ class YearbookBase(Dataset):
             self.datasets[time][self.mode]['labels'] = np.concatenate(
             (self.datasets[time][self.mode]['labels'], self.datasets[prev_time][self.mode]['labels']), axis=0)
         else:
-            prev_time = self.ENV[idx - 5]
-            print("prev_time",prev_time)
-            self.datasets[time][self.mode]['images'] = np.concatenate(
-            (self.datasets[time][self.mode]['images'], 
-             self.datasets[prev_time][self.mode]['images'], 
-             self.datasets[self.ENV[40]][self.mode]['images']), axis=0)
-
-            self.datasets[time][self.mode]['labels'] = np.concatenate(
-            (self.datasets[time][self.mode]['labels'], 
-             self.datasets[prev_time][self.mode]['labels'], 
-             self.datasets[self.ENV[40]][self.mode]['labels']), axis=0)
+            print("prev_time_start_year",self.ENV[idx - 5 + 0])
+            for j in range(5):
+                prev_time = self.ENV[idx - 5 + j]
+                self.datasets[time][self.mode]['images'] = np.concatenate(
+                (self.datasets[time][self.mode]['images'], self.datasets[prev_time][self.mode]['images']), axis=0)
+                self.datasets[time][self.mode]['labels'] = np.concatenate(
+                (self.datasets[time][self.mode]['labels'], self.datasets[prev_time][self.mode]['labels']), axis=0)
 
         if data_del:
             del self.datasets[prev_time]
