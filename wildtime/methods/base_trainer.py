@@ -140,25 +140,21 @@ class BaseTrainer:
                     self.train_step(train_id_dataloader)
                     self.save_model(timestamp)
                     self.saved_timestamps.append(timestamp)
-            
-
-            elif self.split_time < timestamp < self.mid_year and (timestamp - self.split_time) % 5 == 0:
-                self.train_dataset.mode = 0  
+            else:
+                self.train_dataset.mode = 0
                 self.train_dataset.update_current_timestamp(timestamp)
-                self.train_dataset.update_historical(i + 1, incremental_update = True)
-    
-                
-                train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
-                                                         batch_size=self.mini_batch_size,
-                                                         num_workers=self.num_workers, collate_fn=self.train_collate_fn)
-                self.train_step(train_id_dataloader)
-                self.save_model(timestamp)
-                self.saved_timestamps.append(timestamp)
-    
-                self.train_dataset.mode = 1
-                self.train_dataset.update_current_timestamp(timestamp)
-                self.train_dataset.update_historical(i + 1, data_del=True, incremental_update = True)
+                self.train_dataset.update_historical(i + 1)
+                if timestamp < self.mid_year and (timestamp - self.split_time) % 5 == 0:
+                    train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
+                                                             batch_size=self.mini_batch_size,
+                                                             num_workers=self.num_workers, collate_fn=self.train_collate_fn)
+                    self.train_step(train_id_dataloader)
+                    self.save_model(timestamp)
+                    self.saved_timestamps.append(timestamp)
 
+                    if timestamp == self.mid_year:
+                        break
+                            
 
     def load_model_from_path(self, path):
         checkpoint = torch.load(path)
