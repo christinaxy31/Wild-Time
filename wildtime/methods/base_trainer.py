@@ -247,7 +247,7 @@ class BaseTrainer:
             elif timestamp == self.mid_year:
                 self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
-                test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
+                test_id_dataloader = FastDataLoader(dataset=self.eval_dataset[self.mid_year:],
                                                     batch_size=self.mini_batch_size,
                                                     num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
                 id_metric = self.network_evaluation(test_id_dataloader)
