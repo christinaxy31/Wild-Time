@@ -259,7 +259,7 @@ class BaseTrainer:
                 #acc = self.network_evaluation(test_ood_dataloader)
                 #print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
                 #metrics.append(acc)
-                acc = self.evaluate_all_models_on_fixed_test_set(self.saved_timestamps, test_ood_dataloader)
+        acc = self.evaluate_all_models_on_fixed_test_set(self.saved_timestamps, test_ood_dataloader)
         '''
         print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
               f'\nOOD Worst Metric: \t{np.min(metrics)}'
