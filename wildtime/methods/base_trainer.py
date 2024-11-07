@@ -147,7 +147,14 @@ class BaseTrainer:
                 self.train_dataset.mode = 3
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1)
+                self.train_dataset.mode = 4
+                self.train_dataset.update_current_timestamp(timestamp)
+                self.train_dataset.update_historical(i + 1, data_del=True)
                 if timestamp < self.mid_year and (timestamp - self.split_time) % 5 == 0:
+                    self.train_dataset.mode = 3
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    
+                    
                     train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.train_collate_fn)
@@ -264,8 +271,7 @@ class BaseTrainer:
                 #acc = self.network_evaluation(test_ood_dataloader)
                 #print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
                 #metrics.append(acc)
-                after_1990_accuracy = {}
-                after_1990_accuracy[timestamp] = all_trained_models_results
+                print("for year {timestamp}......")
                 acc = self.evaluate_all_models_on_fixed_test_set(self.saved_timestamps, test_ood_dataloader)
         '''
         print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
