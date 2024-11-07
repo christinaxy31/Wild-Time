@@ -2,6 +2,7 @@ import os
 import pickle
 from collections import defaultdict
 
+import copy
 import numpy as np
 import torch
 import torchvision.transforms as transforms
