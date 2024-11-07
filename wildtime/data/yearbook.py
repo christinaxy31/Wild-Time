@@ -171,9 +171,9 @@ class YearbookBase(Dataset):
         start_idx = 0
 
         for year in self.ENV:   
-            self.dataset[year][3] = copy.deepcopy(self.dataset[year][0])
-            self.dataset[year][4] = copy.deepcopy(self.dataset[year][1])
-            self.dataset[year][5] = copy.deepcopy(self.dataset[year][2])
+            self.datasets[year][3] = copy.deepcopy(self.datasets[year][0])
+            self.datasets[year][4] = copy.deepcopy(self.datasets[year][1])
+            self.datasets[year][5] = copy.deepcopy(self.datasets[year][2])
             
         for i in self.ENV:
             end_idx = start_idx + len(self.datasets[i][self.mode]['labels'])
