@@ -112,6 +112,12 @@ def preprocess_orig(args):
         dataset[year][2] = {}
         dataset[year][2]['images'] = np.stack(images[year], axis=0) / 255.0
         dataset[year][2]['labels'] = np.array(labels[year])
+        dataset[year][3] = {}
+        dataset[year][3]['images'] = np.stack(images[year], axis=0) / 255.0
+        dataset[year][3]['labels'] = np.array(labels[year])
+        dataset[year][4] = {}
+        dataset[year][4]['images'] = np.stack(images[year], axis=0) / 255.0
+        dataset[year][4]['labels'] = np.array(labels[year])
 
     preprocessed_data_path = os.path.join(args.data_dir, 'yearbook.pkl')
     pickle.dump(dataset, open(preprocessed_data_path, 'wb'))
