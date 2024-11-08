@@ -151,7 +151,8 @@ class BaseTrainer:
                     else:
                         self.train_step(train_id_dataloader)
                         self.save_model(timestamp)
-                 elif timestamp > self.split_time and timestamp < 1990:
+                
+                elif timestamp > self.split_time and timestamp < 1990:
                     self.train_dataset.mode = 3
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
