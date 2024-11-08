@@ -171,9 +171,35 @@ class YearbookBase(Dataset):
         start_idx = 0
 
         for year in self.ENV:   
-            self.datasets[year][3] = copy.deepcopy(self.datasets[year][2])
-            self.datasets[year][4] = copy.deepcopy(self.datasets[year][2])
-            self.datasets[year][5] = copy.deepcopy(self.datasets[year][2])
+            self.datasets[year][5] = copy.deepcopy(self.datasets[year][2]) #0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
+            num_samples = len(self.datasets[year][2])
+            num_test_images = int((1 - 0.5) * num_samples)
+            idxs = np.random.permutation(np.arange(num_samples))
+            train_idxs = idxs[:num_train_images].astype(int)
+            test_idxs = idxs[num_train_images:].astype(int)
+            train_images = np.array(images[year])[train_idxs]
+            train_labels = np.array(labels[year])[train_idxs]
+            test_images = np.array(images[year])[test_idxs]
+            test_labels = np.array(labels[year])[test_idxs]
+            self.datasets[year][3] = {}
+            self.datasets[year][3]['images'] = np.stack(train_images, axis=0) / 255.0
+            self.datasets[year][3]['labels'] = np.array(train_labels)
+            self.datasets[year][5] = {}
+            self.datasets[year][5]['images'] = np.stack(test_images, axis=0) / 255.0
+            self.datasets[year][5]['labels'] = np.array(test_labels)
+
+        
+            
+                
+            
+            
+            
+
+
+
+            
+            self.datasets[year][4] = copy.deepcopy(self.datasets[year][2]) #0.1 of all
+            self.datasets[year][5] = copy.deepcopy(self.datasets[year][2]) #0.5 of all
             
         for i in self.ENV:
             end_idx = start_idx + len(self.datasets[i][self.mode]['labels'])
