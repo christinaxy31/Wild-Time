@@ -113,15 +113,7 @@ def preprocess_orig(args):
         dataset[year][2] = {}
         dataset[year][2]['images'] = np.stack(images[year], axis=0) / 255.0
         dataset[year][2]['labels'] = np.array(labels[year])
-        dataset[year][3] = {}
-        dataset[year][3]['images'] = np.stack(train_images, axis=0) / 255.0
-        dataset[year][3]['labels'] = np.array(train_labels)
-        dataset[year][4] = {}
-        dataset[year][4]['images'] = np.stack(test_images, axis=0) / 255.0
-        dataset[year][4]['labels'] = np.array(test_labels)
-        dataset[year][5] = {}
-        dataset[year][5]['images'] = np.stack(images[year], axis=0) / 255.0
-        dataset[year][5]['labels'] = np.array(labels[year])
+       
 
     preprocessed_data_path = os.path.join(args.data_dir, 'yearbook.pkl')
     pickle.dump(dataset, open(preprocessed_data_path, 'wb'))
@@ -181,12 +173,36 @@ class YearbookBase(Dataset):
             train_labels = np.array(labels[year])[train_idxs]
             test_images = np.array(images[year])[test_idxs]
             test_labels = np.array(labels[year])[test_idxs]
+
+        for year in self.ENV:   
+            self.datasets[year][5] = copy.deepcopy(self.datasets[year][2]) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
+            num_samples = len(self.datasets[year][2])
+            num_train_valid_images = int(0.5 * num_samples)  # 50% for train+valid
+            num_test_images = num_samples - num_train_valid_images  # Remaining 50% for test
+            idxs = np.random.permutation(np.arange(num_samples))
+            train_valid_idxs = idxs[:num_train_valid_images].astype(int)
+            test_idxs = idxs[num_train_valid_images:].astype(int)
+            num_valid_images = int(0.1 * num_train_valid_images)  
+            valid_idxs = train_valid_idxs[:num_valid_images]
+            train_idxs = train_valid_idxs[num_valid_images:]
+            train_images = np.array(images[year])[train_idxs]
+            train_labels = np.array(labels[year])[train_idxs]
+            valid_images = np.array(images[year])[valid_idxs]
+            valid_labels = np.array(labels[year])[valid_idxs]
+            test_images = np.array(images[year])[test_idxs]
+            test_labels = np.array(labels[year])[test_idxs]
+        
+            
             self.datasets[year][3] = {}
             self.datasets[year][3]['images'] = np.stack(train_images, axis=0) / 255.0
             self.datasets[year][3]['labels'] = np.array(train_labels)
             self.datasets[year][5] = {}
             self.datasets[year][5]['images'] = np.stack(test_images, axis=0) / 255.0
             self.datasets[year][5]['labels'] = np.array(test_labels)
+
+            self.datasets[year][4] = {}
+            self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
+            self.datasets[year][4]['labels'] = np.array(valid_labels)
 
         
             
