@@ -244,6 +244,7 @@ class YearbookBase(Dataset):
 
 
 class Yearbook(YearbookBase):
+    
     def __init__(self, args):
         super().__init__(args=args)
 
@@ -270,7 +271,7 @@ class Yearbook(YearbookBase):
             return image_tensor, label_tensor, ''
 
         return image_tensor, label_tensor
-
+        
     def __len__(self):
         print(self.datasets.keys())
         print(
