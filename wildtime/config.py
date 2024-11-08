@@ -27,7 +27,7 @@ config = {
     'eval_worst_time': False,  # 'evaluate worst timestep accuracy'
     'load_model': False,  # 'load trained model for evaluation only'
     'eval_metric': 'acc',  # choices=['acc', 'f1', 'rmse']
-    'eval_all_timestamps': True,  # 'evaluate at ID and OOD time steps'
+    'eval_all_timestamps': False,  # 'evaluate at ID and OOD time steps'
 
     # FT
     'K': 1,  # 'number of previous timesteps to finetune on'
