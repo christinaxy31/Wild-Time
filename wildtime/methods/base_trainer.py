@@ -41,7 +41,7 @@ class BaseTrainer:
 
         # Evaluation and metrics
         self.split_time = args.split_time
-        self.eval_next_timestamps = args.eval_next_timesteps
+        self.eval_next_timestamps = args.eval_next_timestamps
         self.task_accuracies = {}
         self.worst_time_accuracies = {}
         self.best_time_accuracies = {}
@@ -50,10 +50,6 @@ class BaseTrainer:
             self.eval_metric = 'PCC'
         elif 'mimic' in str(self.eval_dataset) and self.args.prediction_type == 'mortality':
             self.eval_metric = 'ROC-AUC'
-
-        self.last_year = self.eval_dataset.ENV[-1]
-        self.mid_year = (self.last_year + self.split_time) // 2
-        self.saved_timestamps = []
 
     def __str__(self):
         pass
@@ -67,7 +63,7 @@ class BaseTrainer:
             base_trainer_str += f'-mixup-mix_alpha={self.mix_alpha}'
         if self.cut_mix:
             base_trainer_str += f'-cut_mix'
-        if self.args.offline:
+        if self.args.eval_fix:
             base_trainer_str += f'-eval_fix'
         else:
             base_trainer_str += f'-eval_stream'
@@ -91,7 +87,7 @@ class BaseTrainer:
 
     def train_online(self):
         for i, timestamp in enumerate(self.train_dataset.ENV[:-1]):
-            if self.args.offline and timestamp == self.split_time:
+            if self.args.eval_fix and timestamp == self.split_time:
                 break
             if self.args.load_model and self.model_path_exists(timestamp):
                 self.load_model(timestamp)
@@ -105,25 +101,18 @@ class BaseTrainer:
                                                       num_workers=self.num_workers, collate_fn=self.train_collate_fn)
                 self.train_step(train_dataloader)
                 self.save_model(timestamp)
-                
                 if self.args.method in ['coral', 'groupdro', 'irm', 'erm']:
                     self.train_dataset.update_historical(i + 1, data_del=True)
 
-
-
-    
     def train_offline(self):
-        print("last_year:",self.last_year,"split_year:",self.split_time,"mid_year:",self.mid_year)
-        
         if self.args.method in ['simclr', 'swav']:
             self.train_dataset.ssl_training = True
-
         for i, timestamp in enumerate(self.train_dataset.ENV):
             if timestamp < self.split_time:
-                self.train_dataset.mode = 0  
+                self.train_dataset.mode = 0
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1)
-                self.train_dataset.mode = 1  
+                self.train_dataset.mode = 1
                 self.train_dataset.update_current_timestamp(timestamp)
                 self.train_dataset.update_historical(i + 1, data_del=True)
             elif timestamp == self.split_time:
@@ -139,38 +128,9 @@ class BaseTrainer:
                 else:
                     self.train_step(train_id_dataloader)
                     self.save_model(timestamp)
-                    self.saved_timestamps.append(timestamp)
-            else:
-                if timestamp == self.mid_year:
-                    break
-                    
-                self.train_dataset.mode = 3
-                self.train_dataset.update_current_timestamp(timestamp)
-                self.train_dataset.update_historical(i + 1)
-                self.train_dataset.mode = 4
-                self.train_dataset.update_current_timestamp(timestamp)
-                self.train_dataset.update_historical(i + 1, data_del=True)
-                if timestamp < self.mid_year and (timestamp - self.split_time) % 5 == 0:
-                    self.train_dataset.mode = 3
-                    self.train_dataset.update_current_timestamp(timestamp)
-                    
-                    
-                    train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
-                                                             batch_size=self.mini_batch_size,
-                                                             num_workers=self.num_workers, collate_fn=self.train_collate_fn)
-                    self.train_step(train_id_dataloader)
-                    self.save_model(timestamp)
-                    self.saved_timestamps.append(timestamp)
+                break
 
-                    
-                            
-
-    def load_model_from_path(self, path):
-        checkpoint = torch.load(path)
-        self.network.load_state_dict(checkpoint['model_state_dict'])
-        print(f"Loaded model from {path}")
-
-    def network_evaluation(self, test_time_dataloader):   
+    def network_evaluation(self, test_time_dataloader):
         self.network.eval()
         pred_all = []
         y_all = []
@@ -249,56 +209,26 @@ class BaseTrainer:
                 self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
                 self.eval_dataset.update_historical(i + 1, data_del=True)
-                
-            if self.split_time < timestamp < self.mid_year:
-                self.eval_dataset.mode = 4
-                self.eval_dataset.update_current_timestamp(timestamp)
-                self.eval_dataset.update_historical(i + 1, data_del=True)
-            elif timestamp == self.mid_year:
-                self.eval_dataset.mode = 4
+            elif timestamp == self.split_time:
+                self.eval_dataset.mode = 1
                 self.eval_dataset.update_current_timestamp(timestamp)
                 test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
                                                     batch_size=self.mini_batch_size,
                                                     num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
                 id_metric = self.network_evaluation(test_id_dataloader)
                 print(f'ID {self.eval_metric}: \t{id_metric}\n')
-            else:    #after 1990
-                self.eval_dataset.mode = 5
+            else:
+                self.eval_dataset.mode = 2
                 self.eval_dataset.update_current_timestamp(timestamp)
                 test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
                                                      batch_size=self.mini_batch_size,
                                                      num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
-                #acc = self.network_evaluation(test_ood_dataloader)
-                #print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
-                #metrics.append(acc)
-                print("for year {timestamp}......")
-                acc = self.evaluate_all_models_on_fixed_test_set(self.saved_timestamps, test_ood_dataloader)
-        '''
+                acc = self.network_evaluation(test_ood_dataloader)
+                print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
+                metrics.append(acc)
         print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
               f'\nOOD Worst Metric: \t{np.min(metrics)}'
               f'\nAll OOD Metrics: \t{metrics}\n')
-        '''
-
-    def evaluate_all_models_on_fixed_test_set(self, timestamps, test_time_dataloader): #applied to each year after 1990(mode = 5)
-        metrics = {}
-        for timestamp in timestamps: #each timestamp is a trained mpde;
-            model_path = f"./checkpoints/yearbook_ERM-train_update_iter=3000-lr=0.001-mini_batch_size=32-seed=1-eval_fix_time={timestamp}"
-            self.load_model_from_path(model_path)
-            metric = self.network_evaluation(test_time_dataloader)
-            print(f"Evaluation for model saved at timestamp {timestamp}: {self.eval_metric} = {metric}")
-            metrics[timestamp] = metric
-            metrics['avg'] = np.mean(list(metrics.values()))
-            metrics['worst'] = np.min(list(metrics.values()))
-
-        
-            print("\nSummary of different trained model evaluations on 1990+ Test Set on the current year:")
-            print(f"Timestamp {timestamp}: {self.eval_metric} = {metric}")
-            print(f'\nOOD Average Metric: \t{np.mean(list(metrics.values()))}'
-              f'\nOOD Worst Metric: \t{np.min(list(metrics.values()))}'
-              f'\nAll OOD Metrics: \t{metrics}\n')
-        
-        return metrics
-    
 
     def evaluate_offline_all_timestamps(self):
         print(f'\n=================================== Results (Eval-Fix) ===================================')
@@ -382,7 +312,7 @@ class BaseTrainer:
         start_time = time.time()
         if self.args.difficulty:
             self.run_task_difficulty()
-        elif self.args.offline:
+        elif self.args.eval_fix:
             self.run_eval_fix()
         else:
             self.run_eval_stream()
@@ -399,7 +329,7 @@ class BaseTrainer:
 
     def save_model(self, timestamp):
         path = self.get_model_path(timestamp)
-        torch.save({'model_state_dict': self.network.state_dict()}, path)
+        torch.save(self.network.state_dict(), path)
         print(f'Saving model at timestamp {timestamp} to path {path}...\n')
 
     def load_model(self, timestamp):
