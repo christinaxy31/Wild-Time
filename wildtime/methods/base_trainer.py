@@ -63,7 +63,7 @@ class BaseTrainer:
             base_trainer_str += f'-mixup-mix_alpha={self.mix_alpha}'
         if self.cut_mix:
             base_trainer_str += f'-cut_mix'
-        if self.args.eval_fix:
+        if self.args.offline:
             base_trainer_str += f'-eval_fix'
         else:
             base_trainer_str += f'-eval_stream'
@@ -87,7 +87,7 @@ class BaseTrainer:
 
     def train_online(self):
         for i, timestamp in enumerate(self.train_dataset.ENV[:-1]):
-            if self.args.eval_fix and timestamp == self.split_time:
+            if self.args.offline and timestamp == self.split_time:
                 break
             if self.args.load_model and self.model_path_exists(timestamp):
                 self.load_model(timestamp)
@@ -312,7 +312,7 @@ class BaseTrainer:
         start_time = time.time()
         if self.args.difficulty:
             self.run_task_difficulty()
-        elif self.args.eval_fix:
+        elif self.args.offline:
             self.run_eval_fix()
         else:
             self.run_eval_stream()
