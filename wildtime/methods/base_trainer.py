@@ -104,31 +104,67 @@ class BaseTrainer:
                 if self.args.method in ['coral', 'groupdro', 'irm', 'erm']:
                     self.train_dataset.update_historical(i + 1, data_del=True)
 
-    def train_offline(self):
+    def train_offline(self, incremental_flag = True):
         if self.args.method in ['simclr', 'swav']:
             self.train_dataset.ssl_training = True
         for i, timestamp in enumerate(self.train_dataset.ENV):
-            if timestamp < self.split_time:
-                self.train_dataset.mode = 0
-                self.train_dataset.update_current_timestamp(timestamp)
-                self.train_dataset.update_historical(i + 1)
-                self.train_dataset.mode = 1
-                self.train_dataset.update_current_timestamp(timestamp)
-                self.train_dataset.update_historical(i + 1, data_del=True)
-            elif timestamp == self.split_time:
-                self.train_dataset.mode = 0
-                self.train_dataset.update_current_timestamp(timestamp)
-                if self.args.method in ['simclr', 'swav']:
-                    self.train_dataset.ssl_training = True
-                train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
-                                                         batch_size=self.mini_batch_size,
-                                                         num_workers=self.num_workers, collate_fn=self.train_collate_fn)
-                if self.args.load_model:
-                    self.load_model(timestamp)
+            if not incremental_flag:
+                if timestamp < self.split_time:
+                    self.train_dataset.mode = 0
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    self.train_dataset.update_historical(i + 1)
+                    self.train_dataset.mode = 1
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    self.train_dataset.update_historical(i + 1, data_del=True)
+                elif timestamp == self.split_time:
+                    self.train_dataset.mode = 0
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    if self.args.method in ['simclr', 'swav']:
+                        self.train_dataset.ssl_training = True
+                    train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
+                                                             batch_size=self.mini_batch_size,
+                                                             num_workers=self.num_workers, collate_fn=self.train_collate_fn)
+                    if self.args.load_model:
+                        self.load_model(timestamp)
+                    else:
+                        self.train_step(train_id_dataloader)
+                        self.save_model(timestamp)
+                    break
+            else:
+                if timestamp < self.split_time:
+                    self.train_dataset.mode = 0
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    self.train_dataset.update_historical(i + 1)
+                    self.train_dataset.mode = 1
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    self.train_dataset.update_historical(i + 1, data_del=True)
+                elif timestamp == self.split_time:
+                    self.train_dataset.mode = 0
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    if self.args.method in ['simclr', 'swav']:
+                        self.train_dataset.ssl_training = True
+                    train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
+                                                             batch_size=self.mini_batch_size,
+                                                             num_workers=self.num_workers, collate_fn=self.train_collate_fn)
+                    if self.args.load_model:
+                        self.load_model(timestamp)
+                    else:
+                        self.train_step(train_id_dataloader)
+                        self.save_model(timestamp)
                 else:
-                    self.train_step(train_id_dataloader)
-                    self.save_model(timestamp)
-                break
+                    self.train_dataset.mode = 3
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    if self.args.method in ['simclr', 'swav']:
+                        self.train_dataset.ssl_training = True
+                    train_id_dataloader = ProportionalDataLoader(dataset=self.train_dataset, weights=None,
+                                                             batch_size=self.mini_batch_size,
+                                                             num_workers=self.num_workers, collate_fn=self.train_collate_fn, proportion = 0.2)
+                    if self.args.load_model:
+                        self.load_model(timestamp)
+                    else:
+                        self.train_step(train_id_dataloader)
+                        self.save_model(timestamp)
+                    
 
     def network_evaluation(self, test_time_dataloader):
         self.network.eval()
@@ -199,36 +235,76 @@ class BaseTrainer:
             self.worst_time_accuracies[timestamp] = worst_metric
             self.best_time_accuracies[timestamp] = best_metric
 
-    def evaluate_offline(self):
+    def evaluate_offline(self, incremental_flag = True):
         print(f'\n=================================== Results (Eval-Fix) ===================================')
         print(f'Metric: {self.eval_metric}\n')
         timestamps = self.eval_dataset.ENV
         metrics = []
         for i, timestamp in enumerate(timestamps):
-            if timestamp < self.split_time:
-                self.eval_dataset.mode = 1
-                self.eval_dataset.update_current_timestamp(timestamp)
-                self.eval_dataset.update_historical(i + 1, data_del=True)
-            elif timestamp == self.split_time:
-                self.eval_dataset.mode = 1
-                self.eval_dataset.update_current_timestamp(timestamp)
-                test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
-                                                    batch_size=self.mini_batch_size,
-                                                    num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
-                id_metric = self.network_evaluation(test_id_dataloader)
-                print(f'ID {self.eval_metric}: \t{id_metric}\n')
+            if not incremental_flag:      
+                if timestamp < self.split_time:
+                    self.eval_dataset.mode = 1
+                    self.eval_dataset.update_current_timestamp(timestamp)
+                    self.eval_dataset.update_historical(i + 1, data_del=True)
+                elif timestamp == self.split_time:
+                    self.eval_dataset.mode = 1
+                    self.eval_dataset.update_current_timestamp(timestamp)
+                    test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
+                                                        batch_size=self.mini_batch_size,
+                                                        num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
+                    id_metric = self.network_evaluation(test_id_dataloader)
+                    print(f'ID {self.eval_metric}: \t{id_metric}\n')
+                else:
+                    self.eval_dataset.mode = 2
+                    self.eval_dataset.update_current_timestamp(timestamp)
+                    test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
+                                                         batch_size=self.mini_batch_size,
+                                                         num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
+                    acc = self.network_evaluation(test_ood_dataloader)
+                    print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
+                    metrics.append(acc)
+                    print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
+                          f'\nOOD Worst Metric: \t{np.min(metrics)}'
+                          f'\nAll OOD Metrics: \t{metrics}\n')
             else:
-                self.eval_dataset.mode = 2
-                self.eval_dataset.update_current_timestamp(timestamp)
-                test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
-                                                     batch_size=self.mini_batch_size,
-                                                     num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
-                acc = self.network_evaluation(test_ood_dataloader)
-                print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
-                metrics.append(acc)
-        print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
-              f'\nOOD Worst Metric: \t{np.min(metrics)}'
-              f'\nAll OOD Metrics: \t{metrics}\n')
+
+                if timestamp < self.split_time:
+                    self.eval_dataset.mode = 1
+                    self.eval_dataset.update_current_timestamp(timestamp)
+                    self.eval_dataset.update_historical(i + 1, data_del=True)
+                elif timestamp == self.split_time:
+                    self.eval_dataset.mode = 1
+                    self.eval_dataset.update_current_timestamp(timestamp)
+                    test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
+                                                        batch_size=self.mini_batch_size,
+                                                        num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
+                    id_metric = self.network_evaluation(test_id_dataloader)
+                    print(f'ID {self.eval_metric}: \t{id_metric}\n')
+                elif self.split_time < timestamp < 1990:
+                    self.eval_dataset.mode = 4
+                    self.eval_dataset.update_current_timestamp(timestamp)
+                    self.eval_dataset.update_historical(i + 1, data_del=True)
+                elif timestamp == 1990:
+                    self.eval_dataset.mode = 4
+                    self.eval_dataset.update_current_timestamp(timestamp)
+                    new_valid_dataloader = FastDataLoader(dataset=self.eval_dataset,
+                                                         batch_size=self.mini_batch_size,
+                                                         num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
+                    new_valid_metric = self.network_evaluation(new_valid_dataloader)
+                    print(f'ID {self.eval_metric}: \t{new_valid_metric}\n')
+                else:
+                    self.eval_dataset.mode = 5
+                    self.eval_dataset.update_current_timestamp(timestamp)
+                    test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
+                                                         batch_size=self.mini_batch_size,
+                                                         num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
+                    acc = self.network_evaluation(test_ood_dataloader)
+                    print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
+                    metrics.append(acc)
+                    print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
+                          f'\nOOD Worst Metric: \t{np.min(metrics)}'
+                          f'\nAll OOD Metrics: \t{metrics}\n')
+                    
 
     def evaluate_offline_all_timestamps(self):
         print(f'\n=================================== Results (Eval-Fix) ===================================')
