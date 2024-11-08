@@ -15,10 +15,13 @@ def proportional_collate_fn(batch, dataset, proportion):
     
     sampled_images = images[sampled_indices]
     sampled_labels = labels[sampled_indices]
-    image_tensors = torch.FloatTensor(sampled_images).permute(0, 3, 1, 2)
+    image_tensors = torch.FloatTensor(sampled_images).permute(2, 0, 1)
     label_tensors = torch.LongTensor(sampled_labels)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    return image_tensors, label_tensors
+    return image_tensors.to(device), label_tensors.to(device)
+    
+  
 
 class _InfiniteSampler(torch.utils.data.Sampler):
     """Wraps another Sampler to yield an infinite stream."""
