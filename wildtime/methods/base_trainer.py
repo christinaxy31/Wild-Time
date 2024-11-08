@@ -164,7 +164,7 @@ class BaseTrainer:
                     self.train_dataset.update_current_timestamp(timestamp)
                     if self.args.method in ['simclr', 'swav']:
                         self.train_dataset.ssl_training = True
-                    train_id_dataloader = ProporationalDataLoader(dataset=self.train_dataset, weights=None,
+                    train_id_dataloader = ProportionalDataLoader(dataset=self.train_dataset, weights=None,
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.train_collate_fn, proportion = 0.2)
                     if self.args.load_model:
