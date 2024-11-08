@@ -151,19 +151,27 @@ class BaseTrainer:
                     else:
                         self.train_step(train_id_dataloader)
                         self.save_model(timestamp)
-                else:
+                 elif timestamp > self.split_time and timestamp < 1990:
+                    self.train_dataset.mode = 3
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    self.train_dataset.update_historical(i + 1)
+                    self.train_dataset.mode = 4
+                    self.train_dataset.update_current_timestamp(timestamp)
+                    self.train_dataset.update_historical(i + 1, data_del=True)
+                elif timestamp == 1990:
                     self.train_dataset.mode = 3
                     self.train_dataset.update_current_timestamp(timestamp)
                     if self.args.method in ['simclr', 'swav']:
                         self.train_dataset.ssl_training = True
-                    train_id_dataloader = ProportionalDataLoader(dataset=self.train_dataset, weights=None,
+                    train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
                                                              batch_size=self.mini_batch_size,
-                                                             num_workers=self.num_workers, collate_fn=self.train_collate_fn, proportion = 0.2)
+                                                             num_workers=self.num_workers, collate_fn=self.train_collate_fn)
                     if self.args.load_model:
                         self.load_model(timestamp)
                     else:
                         self.train_step(train_id_dataloader)
                         self.save_model(timestamp)
+                    break
                     
 
     def network_evaluation(self, test_time_dataloader):
