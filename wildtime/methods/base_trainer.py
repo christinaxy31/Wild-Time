@@ -41,7 +41,7 @@ class BaseTrainer:
 
         # Evaluation and metrics
         self.split_time = args.split_time
-        self.eval_next_timestamps = args.eval_next_timestamps
+        self.eval_next_timestamps = args.eval_next_timesteps
         self.task_accuracies = {}
         self.worst_time_accuracies = {}
         self.best_time_accuracies = {}
