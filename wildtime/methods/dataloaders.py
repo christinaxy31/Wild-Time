@@ -66,7 +66,7 @@ class InfiniteDataLoader:
 
 
 class ProportionalDataLoader:
-    def __init__(self, dataset, weights, batch_size, num_workers, collate_fn=None):
+    def __init__(self, dataset, weights, batch_size, num_workers, collate_fn=None, proportion):
         super().__init__()
 
         if weights is not None:
