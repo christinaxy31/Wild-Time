@@ -217,15 +217,6 @@ class YearbookBase(Dataset):
             
                 
             
-            
-            
-
-
-
-            
-            self.datasets[year][4] = copy.deepcopy(self.datasets[year][2]) #0.1 of all
-            self.datasets[year][5] = copy.deepcopy(self.datasets[year][2]) #0.5 of all
-            
         for i in self.ENV:
             end_idx = start_idx + len(self.datasets[i][self.mode]['labels'])
             self.task_idxs[i] = {}
