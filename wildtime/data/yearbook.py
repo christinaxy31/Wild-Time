@@ -166,7 +166,9 @@ class YearbookBase(Dataset):
 
         for year in self.ENV:   
             self.datasets[year][5] = copy.deepcopy(self.datasets[year][2]) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
-            num_samples = len(self.datasets[year][2])
+            images = self.datasets[year][5]['images']
+            labels = self.datasets[year][5]['labels']
+            num_samples = len(self.datasets[year][5])
             num_train_valid_images = int(0.5 * num_samples)  # 50% for train+valid
             num_test_images = num_samples - num_train_valid_images  # Remaining 50% for test
             idxs = np.random.permutation(np.arange(num_samples))
