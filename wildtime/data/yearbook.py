@@ -165,14 +165,21 @@ class YearbookBase(Dataset):
         
 
         for year in self.ENV:   
+            '''
             print(year)
             print(len(self.datasets[year][0]['images']))
             print(len(self.datasets[year][1]['images']))
             print(len(self.datasets[year][2]['images']))
             '''
-            self.datasets[year][5] = copy.deepcopy(self.datasets[year][2]) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
+            
+            self.datasets[year][5]['images'] = copy.deepcopy(self.datasets[year][2]['images']) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
+            self.datasets[year][5]['labels'] = copy.deepcopy(self.datasets[year][2]['labels'])
+            
             images = self.datasets[year][5]['images']
             labels = self.datasets[year][5]['labels']
+            print(len(self.datasets[year][5]['images']))
+            print(len(self.datasets[year][5]['labels']))
+            
             num_samples = len(self.datasets[year][5])
             num_train_valid_images = int(0.5 * num_samples)  # 50% for train+valid
             num_test_images = num_samples - num_train_valid_images  # Remaining 50% for test
@@ -205,7 +212,7 @@ class YearbookBase(Dataset):
             self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
             self.datasets[year][4]['labels'] = np.array(valid_labels)
 
-            '''
+            
             
                 
             
