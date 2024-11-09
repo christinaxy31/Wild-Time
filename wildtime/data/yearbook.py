@@ -175,6 +175,7 @@ class YearbookBase(Dataset):
             train_valid_idxs = idxs[:num_train_valid_images].astype(int)
             test_idxs = idxs[num_train_valid_images:].astype(int)
             num_valid_images = int(0.1 * num_train_valid_images)  
+            print("num_valid",num_valid_images)
             valid_idxs = train_valid_idxs[:num_valid_images]
             train_idxs = train_valid_idxs[num_valid_images:]
             train_images = np.array(images)[train_idxs]
