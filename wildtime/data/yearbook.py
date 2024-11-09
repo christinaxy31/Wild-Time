@@ -175,7 +175,7 @@ class YearbookBase(Dataset):
             train_valid_idxs = idxs[:num_train_valid_images].astype(int)
             test_idxs = idxs[num_train_valid_images:].astype(int)
             num_valid_images = int(0.1 * num_train_valid_images)  
-            
+            print("year",year)
             print("num_train_valid_images",num_train_valid_images)
             print("num_valid",num_valid_images)
             print("num_samples",num_samples)
