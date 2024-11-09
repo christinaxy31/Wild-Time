@@ -181,7 +181,7 @@ class YearbookBase(Dataset):
             print(len(self.datasets[year][6]['images']))
             print(len(self.datasets[year][6]['labels']))
             
-            num_samples = len(self.datasets[year][6])
+            num_samples = len(labels)
             num_train_valid_images = int(0.5 * num_samples)  # 50% for train+valid
             num_test_images = num_samples - num_train_valid_images  # Remaining 50% for test
             idxs = np.random.permutation(np.arange(num_samples))
