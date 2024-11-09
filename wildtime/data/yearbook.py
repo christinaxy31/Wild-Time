@@ -324,7 +324,7 @@ class Yearbook(YearbookBase):
         return image_tensor, label_tensor
         
     def __len__(self):
-        #print(self.datasets.keys())
+        print(self.datasets.keys())
         print(
             f'mode = {self.mode}'
             f'\t current_time = {self.current_time}'
