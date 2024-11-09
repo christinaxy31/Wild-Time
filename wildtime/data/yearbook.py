@@ -238,6 +238,7 @@ class YearbookBase(Dataset):
         prev_time = self.ENV[idx - 1]
         print(time)
         print(prev_time)
+        print(self.mode)
         print(self.datasets.keys())
         print(self.datasets[prev_time].keys())
         self.datasets[time][self.mode]['images'] = np.concatenate(
