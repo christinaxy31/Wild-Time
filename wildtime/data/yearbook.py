@@ -166,9 +166,9 @@ class YearbookBase(Dataset):
 
         for year in self.ENV:   
             print(year)
-            print(len(self.datasets[year][0]))
-            print(len(self.datasets[year][1]))
-            print(len(self.datasets[year][2]))
+            print(len(self.datasets[year][0]['images']))
+            print(len(self.datasets[year][1]['images']))
+            print(len(self.datasets[year][2]['images']))
             '''
             self.datasets[year][5] = copy.deepcopy(self.datasets[year][2]) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
             images = self.datasets[year][5]['images']
