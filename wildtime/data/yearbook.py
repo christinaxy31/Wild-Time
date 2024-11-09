@@ -177,12 +177,12 @@ class YearbookBase(Dataset):
             num_valid_images = int(0.1 * num_train_valid_images)  
             valid_idxs = train_valid_idxs[:num_valid_images]
             train_idxs = train_valid_idxs[num_valid_images:]
-            train_images = np.array(images[year])[train_idxs]
-            train_labels = np.array(labels[year])[train_idxs]
-            valid_images = np.array(images[year])[valid_idxs]
-            valid_labels = np.array(labels[year])[valid_idxs]
-            test_images = np.array(images[year])[test_idxs]
-            test_labels = np.array(labels[year])[test_idxs]
+            train_images = np.array(images)[train_idxs]
+            train_labels = np.array(labels)[train_idxs]
+            valid_images = np.array(images)[valid_idxs]
+            valid_labels = np.array(labels)[valid_idxs]
+            test_images = np.array(images)[test_idxs]
+            test_labels = np.array(labels)[test_idxs]
         
             
             self.datasets[year][3] = {}
