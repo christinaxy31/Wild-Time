@@ -162,17 +162,7 @@ class YearbookBase(Dataset):
         self.task_idxs = {}
         start_idx = 0
 
-        for year in self.ENV:   
-            self.datasets[year][5] = copy.deepcopy(self.datasets[year][2]) #0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
-            num_samples = len(self.datasets[year][2])
-            num_test_images = int((1 - 0.5) * num_samples)
-            idxs = np.random.permutation(np.arange(num_samples))
-            train_idxs = idxs[:num_train_images].astype(int)
-            test_idxs = idxs[num_train_images:].astype(int)
-            train_images = np.array(images[year])[train_idxs]
-            train_labels = np.array(labels[year])[train_idxs]
-            test_images = np.array(images[year])[test_idxs]
-            test_labels = np.array(labels[year])[test_idxs]
+        
 
         for year in self.ENV:   
             self.datasets[year][5] = copy.deepcopy(self.datasets[year][2]) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
