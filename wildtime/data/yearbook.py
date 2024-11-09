@@ -171,16 +171,17 @@ class YearbookBase(Dataset):
             print(len(self.datasets[year][1]['images']))
             print(len(self.datasets[year][2]['images']))
             '''
+          
+            self.datasets[year][6] = {}
+            self.datasets[year][6]['images'] = copy.deepcopy(self.datasets[year][2]['images']) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
+            self.datasets[year][6]['labels'] = copy.deepcopy(self.datasets[year][2]['labels'])
             
-            self.datasets[year][5]['images'] = copy.deepcopy(self.datasets[year][2]['images']) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
-            self.datasets[year][5]['labels'] = copy.deepcopy(self.datasets[year][2]['labels'])
+            images = self.datasets[year][6]['images']
+            labels = self.datasets[year][6]['labels']
+            print(len(self.datasets[year][6]['images']))
+            print(len(self.datasets[year][6]['labels']))
             
-            images = self.datasets[year][5]['images']
-            labels = self.datasets[year][5]['labels']
-            print(len(self.datasets[year][5]['images']))
-            print(len(self.datasets[year][5]['labels']))
-            
-            num_samples = len(self.datasets[year][5])
+            num_samples = len(self.datasets[year][6])
             num_train_valid_images = int(0.5 * num_samples)  # 50% for train+valid
             num_test_images = num_samples - num_train_valid_images  # Remaining 50% for test
             idxs = np.random.permutation(np.arange(num_samples))
