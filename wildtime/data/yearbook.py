@@ -213,6 +213,7 @@ class YearbookBase(Dataset):
             self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
             self.datasets[year][4]['labels'] = np.array(valid_labels)
 
+        print(self.datasets[year][4].keys())
             
             
                 
