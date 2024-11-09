@@ -245,6 +245,9 @@ class YearbookBase(Dataset):
     def update_historical(self, idx, data_del=False):
         time = self.ENV[idx]
         prev_time = self.ENV[idx - 1]
+        print(time)
+        print(prev_time)
+        print(self.datasets[time].keys())
         self.datasets[time][self.mode]['images'] = np.concatenate(
             (self.datasets[time][self.mode]['images'], self.datasets[prev_time][self.mode]['images']), axis=0)
         self.datasets[time][self.mode]['labels'] = np.concatenate(
