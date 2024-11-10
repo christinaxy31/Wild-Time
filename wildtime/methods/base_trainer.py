@@ -185,11 +185,13 @@ class BaseTrainer:
                     train_id_dataloader = ProportionalDataLoader(dataset=self.train_dataset, weights=None,
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.train_collate_fn, proportion = 0.8)
+                    '''
                     if self.args.load_model:
                         self.load_model(timestamp)
                     else:
                         self.train_step(train_id_dataloader)
                         self.save_model(timestamp)
+                    '''
                     break
                     
 
