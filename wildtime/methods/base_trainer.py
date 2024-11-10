@@ -136,27 +136,27 @@ class BaseTrainer:
                     self.train_dataset.mode = 0
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
-                    '''
+            
                     self.train_dataset.mode = 3
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
                     self.train_dataset.mode = 4
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
-                    '''
+                    
                     self.train_dataset.mode = 1
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
                     
                 elif timestamp == self.split_time:
-                    '''
+                    
                     self.train_dataset.mode = 3
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
                     self.train_dataset.mode = 4
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
-                    '''
+                    
                     self.train_dataset.mode = 0
                     self.train_dataset.update_current_timestamp(timestamp)
                     if self.args.method in ['simclr', 'swav']:
@@ -299,17 +299,17 @@ class BaseTrainer:
                     self.eval_dataset.mode = 1
                     self.eval_dataset.update_current_timestamp(timestamp)
                     self.eval_dataset.update_historical(i + 1)
-                    '''
+                    
                     self.eval_dataset.mode = 4
                     self.eval_dataset.update_current_timestamp(timestamp)
                     self.eval_dataset.update_historical(i + 1)
-                    '''
+                    
                 elif timestamp == self.split_time:
-                    '''
+                    
                     self.eval_dataset.mode = 4
                     self.eval_dataset.update_current_timestamp(timestamp)
                     self.eval_dataset.update_historical(i + 1)
-                    '''
+                    
                     self.eval_dataset.mode = 1
                     self.eval_dataset.update_current_timestamp(timestamp)
                     test_id_dataloader = FastDataLoader(dataset=self.eval_dataset,
