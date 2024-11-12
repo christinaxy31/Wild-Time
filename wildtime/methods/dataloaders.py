@@ -1,7 +1,9 @@
 import torch
-from torch.utils.data import DataLoader, WeightedRandomSampler, RandomSampler, BatchSampler
+from torch.utils.data import DataLoader, WeightedRandomSampler, RandomSampler, BatchSampler, Subset
 import numpy as np
 
+
+'''
 def proportional_collate_fn(batch, dataset, proportion):
     
     year_data = dataset.datasets[dataset.current_time][dataset.mode]
@@ -20,8 +22,8 @@ def proportional_collate_fn(batch, dataset, proportion):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     return image_tensors.to(device), label_tensors.to(device)
-    
-  
+
+'''
 
 class _InfiniteSampler(torch.utils.data.Sampler):
     """Wraps another Sampler to yield an infinite stream."""
@@ -68,6 +70,50 @@ class InfiniteDataLoader:
 
 
 
+
+class ProportionalDataLoader:
+    def __init__(self, dataset, weights, proportion, batch_size, num_workers, collate_fn=None):
+        super().__init__()
+
+        # Step 1: Select a subset of the dataset based on the specified proportion
+        subset_size = int(len(dataset) * proportion)
+        indices = torch.randperm(len(dataset))[:subset_size]  # Randomly select a proportion of the dataset
+        self.subset = Subset(dataset, indices)  # Create a subset with the specified proportion of data
+
+        # Step 2: Set up sampler based on weights or random sampling
+        if weights is not None:
+            # Apply weights only to the subset
+            subset_weights = [weights[i] for i in indices]
+            sampler = torch.utils.data.WeightedRandomSampler(subset_weights, replacement=True, num_samples=batch_size)
+        else:
+            sampler = torch.utils.data.RandomSampler(self.subset, replacement=True)
+
+        # Step 3: Set up batch sampler
+        batch_sampler = torch.utils.data.BatchSampler(
+            sampler,
+            batch_size=min(batch_size, len(self.subset)),
+            drop_last=True
+        )
+
+        # Step 4: Initialize the infinite iterator
+        self._infinite_iterator = iter(DataLoader(
+            self.subset,
+            num_workers=num_workers,
+            batch_sampler=_InfiniteSampler(batch_sampler),
+            collate_fn=collate_fn
+        ))
+
+    def __iter__(self):
+        while True:
+            yield next(self._infinite_iterator)
+
+    def __len__(self):
+        raise ValueError("Infinite data loader does not have a defined length.")
+
+
+
+
+'''
 class ProportionalDataLoader:
     def __init__(self, dataset, weights, proportion, batch_size, num_workers, collate_fn=None):
         super().__init__()
@@ -98,7 +144,7 @@ class ProportionalDataLoader:
 
     def __len__(self):
         raise ValueError
-
+'''
 
 class FastDataLoader:
     """DataLoader wrapper with slightly improved speed by not respawning worker
