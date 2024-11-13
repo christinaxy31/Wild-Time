@@ -126,7 +126,9 @@ class CombinedInfiniteDataLoader:
         self.collate_fn = collate_fn
         
         # Step 1: Get indices for data before and after 1970
-        pre_1970_indices = [i for i, data in enumerate(dataset) if data[0] < split_year]
+        for i, data in enumerate(dataset[:10]):
+            print(data)
+        pre_1970_indices = [i for i, data in enumerate(dataset) print(data)]
         post_1970_indices = [i for i, data in enumerate(dataset) if data[0] >= split_year]
         
         # Step 2: Create a subset containing all data before 1970
