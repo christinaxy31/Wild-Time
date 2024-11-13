@@ -204,10 +204,10 @@ class YearbookBase(Dataset):
             if year < 1970:
                 self.datasets[year][3] = {}
                 self.datasets[year][3]['images'] = self.datasets[year][0]['images']
-                self.datasets[year][3]['labels'] = self.datasets[year][0]['images']
+                self.datasets[year][3]['labels'] = self.datasets[year][0]['labels']
                 self.datasets[year][4] = {}
                 self.datasets[year][4]['images'] = self.datasets[year][1]['images']
-                self.datasets[year][4]['labels'] = self.datasets[year][1]['images']
+                self.datasets[year][4]['labels'] = self.datasets[year][1]['labels']
                 
             else:
                 
