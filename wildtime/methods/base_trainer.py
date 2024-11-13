@@ -339,6 +339,7 @@ class BaseTrainer:
                                                         num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
                     id_org_metric = self.network_evaluation(test_id_dataloader)
                     print(f'ID original: {self.eval_metric}: \t{id_org_metric}\n')
+                    
                 else:
                     if timestamp < self.eval_dataset.ENV[-1]:
                         self.eval_dataset.mode = 4
@@ -356,7 +357,19 @@ class BaseTrainer:
                         print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
                               f'\nOOD Worst Metric: \t{np.min(metrics)}'
                               f'\nAll OOD Metrics: \t{metrics}\n')
-                
+                        print('mode ======== 2')
+                        self.eval_dataset.mode = 2
+                        self.eval_dataset.update_current_timestamp(timestamp)
+                        test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
+                                                             batch_size=self.mini_batch_size,
+                                                             num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
+                        acc = self.network_evaluation(test_ood_dataloader)
+                        print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
+                        metrics.append(acc)
+                        print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
+                              f'\nOOD Worst Metric: \t{np.min(metrics)}'
+                              f'\nAll OOD Metrics: \t{metrics}\n')
+                    
                         
                     elif timestamp == self.eval_dataset.ENV[-1]:
                         self.eval_dataset.mode = 4
@@ -378,7 +391,20 @@ class BaseTrainer:
                         print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
                               f'\nOOD Worst Metric: \t{np.min(metrics)}'
                               f'\nAll OOD Metrics: \t{metrics}\n')
-                        
+
+                        print('mode ======== 2')
+                        self.eval_dataset.mode = 2
+                        self.eval_dataset.update_current_timestamp(timestamp)
+                        test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
+                                                             batch_size=self.mini_batch_size,
+                                                             num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
+                        acc = self.network_evaluation(test_ood_dataloader)
+                        print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
+                        metrics.append(acc)
+                        print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
+                              f'\nOOD Worst Metric: \t{np.min(metrics)}'
+                              f'\nAll OOD Metrics: \t{metrics}\n')
+                    
                     
                     
                
