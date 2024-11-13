@@ -193,7 +193,7 @@ class BaseTrainer:
                                                                 split_year=1970,
                                                                 proportion=0.4,
                                                                 weights=None, 
-                                                                collate_fn=self.train_collate_fn，
+                                                                collate_fn=self.train_collate_fn,
                                                                 batch_size=self.mini_batch_size,
                                                                 num_workers=self.num_workers)
                    
