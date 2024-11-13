@@ -201,19 +201,28 @@ class YearbookBase(Dataset):
             test_images = np.array(images)[test_idxs]
             test_labels = np.array(labels)[test_idxs]
         
-            
-            self.datasets[year][3] = {}
-            self.datasets[year][3]['images'] = np.stack(train_images, axis=0) / 255.0
-            self.datasets[year][3]['labels'] = np.array(train_labels)
-            self.datasets[year][5] = {}
-            self.datasets[year][5]['images'] = np.stack(test_images, axis=0) / 255.0
-            self.datasets[year][5]['labels'] = np.array(test_labels)
+            if year < 1970:
+                self.datasets[year][3] = {}
+                self.datasets[year][3]['images'] = np.stack(images, axis=0) / 255.0
+                self.datasets[year][3]['labels'] = np.array(labels)
+                self.datasets[year][4] = {}
+                self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
+                self.datasets[year][4]['labels'] = np.array(valid_labels)
+            else:
+                
+                self.datasets[year][3] = {}
+                self.datasets[year][3]['images'] = np.stack(train_images, axis=0) / 255.0
+                self.datasets[year][3]['labels'] = np.array(train_labels)
+                
+                self.datasets[year][5] = {}
+                self.datasets[year][5]['images'] = np.stack(test_images, axis=0) / 255.0
+                self.datasets[year][5]['labels'] = np.array(test_labels)
+    
+                self.datasets[year][4] = {}
+                self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
+                self.datasets[year][4]['labels'] = np.array(valid_labels)
 
-            self.datasets[year][4] = {}
-            self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
-            self.datasets[year][4]['labels'] = np.array(valid_labels)
-
-        print(self.datasets.keys())
+        #print(self.datasets.keys())
             
             
                 
