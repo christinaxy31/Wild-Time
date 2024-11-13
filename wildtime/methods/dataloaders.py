@@ -116,6 +116,7 @@ class ProportionalDataLoader:
 
 
 
+
 class CombinedInfiniteDataLoader:
     def __init__(self, dataset, split_year=1970, proportion=0.5, weights=None, batch_size=32, num_workers=0, collate_fn=None):
         self.split_year = split_year
@@ -151,7 +152,10 @@ class CombinedInfiniteDataLoader:
             collate_fn=collate_fn
         )
 
-    def __iter__(self):
+        # Initialize the infinite iterator for combined batches
+        self._infinite_iterator = self._create_infinite_iterator()
+
+    def _create_infinite_iterator(self):
         # Create iterators for each loader
         pre_1970_iter = iter(self.pre_1970_loader)
         post_1970_iter = iter(self.post_1970_loader)
@@ -168,9 +172,11 @@ class CombinedInfiniteDataLoader:
             }
             yield combined_batch
 
+    def __iter__(self):
+        return self._infinite_iterator
+
     def __len__(self):
-        # Return the length of the larger of the two loaders
-        return max(len(self.pre_1970_loader), len(self.post_1970_loader))
+        raise ValueError("CombinedInfiniteDataLoader does not have a defined length.")
 
 
 '''
