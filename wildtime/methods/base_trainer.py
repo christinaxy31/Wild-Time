@@ -345,7 +345,7 @@ class BaseTrainer:
                         self.eval_dataset.mode = 4
                         self.eval_dataset.update_current_timestamp(timestamp)
                         self.eval_dataset.update_historical(i + 1)
-
+                        
                         self.eval_dataset.mode = 5
                         self.eval_dataset.update_current_timestamp(timestamp)
                         test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
@@ -353,7 +353,7 @@ class BaseTrainer:
                                                              num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
                         acc = self.network_evaluation(test_ood_dataloader)
                         print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
-                        metrics.append(acc)
+                        #metrics.append(acc)
                         print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
                               f'\nOOD Worst Metric: \t{np.min(metrics)}'
                               f'\nAll OOD Metrics: \t{metrics}\n')
