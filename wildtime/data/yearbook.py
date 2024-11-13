@@ -203,11 +203,12 @@ class YearbookBase(Dataset):
         
             if year < 1970:
                 self.datasets[year][3] = {}
-                self.datasets[year][3]['images'] = np.stack(images, axis=0) / 255.0
-                self.datasets[year][3]['labels'] = np.array(labels)
+                self.datasets[year][3]['images'] = self.datasets[year][0]['images']
+                self.datasets[year][3]['labels'] = self.datasets[year][0]['images']
                 self.datasets[year][4] = {}
-                self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
-                self.datasets[year][4]['labels'] = np.array(valid_labels)
+                self.datasets[year][4]['images'] = self.datasets[year][1]['images']
+                self.datasets[year][4]['labels'] = self.datasets[year][1]['images']
+                
             else:
                 
                 self.datasets[year][3] = {}
