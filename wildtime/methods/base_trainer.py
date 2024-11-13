@@ -165,12 +165,15 @@ class BaseTrainer:
                         self.train_dataset.ssl_training = True
                     train_id_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
                                                              batch_size=self.mini_batch_size,
+                    
                                                              num_workers=self.num_workers, collate_fn=self.train_collate_fn)
+                    '''
                     if self.args.load_model:
                         self.load_model(timestamp)
                     else:
                         self.train_step(train_id_dataloader)
                         self.save_model(timestamp)
+                    '''
                 
                 elif timestamp < self.train_dataset.ENV[-1]: #>1970
                     self.train_dataset.mode = 3
