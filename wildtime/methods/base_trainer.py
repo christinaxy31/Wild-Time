@@ -184,14 +184,23 @@ class BaseTrainer:
                     self.train_dataset.update_current_timestamp(timestamp)
                     if self.args.method in ['simclr', 'swav']:
                         self.train_dataset.ssl_training = True
+                    '''
                     train_id_dataloader = ProportionalDataLoader(dataset=self.train_dataset, weights=None,
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.train_collate_fn, proportion = 0.8)
-                    
+                    '''
+                    combined_loader = CombinedInfiniteDataLoader(dataset=self.train_dataset,
+                                                                split_year=1970,
+                                                                proportion=0.4,
+                                                                weights=None, 
+                                                                collate_fn=self.train_collate_fn，
+                                                                batch_size=self.mini_batch_size,
+                                                                num_workers=self.num_workers)
+                   
                     if self.args.load_model:
                         self.load_model(timestamp)
                     else:
-                        self.train_step(train_id_dataloader)
+                        self.train_step(combined_loader)
                         self.save_model(timestamp)
                     
                     break
