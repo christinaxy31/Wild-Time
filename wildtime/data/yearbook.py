@@ -210,8 +210,8 @@ class YearbookBase(Dataset):
 
     
             subset_size = int(len(train_images) * proportion)
-            incremental_train_images = train_images[:subset_size])
-            incremental_train_labels = train_labels[:subset_size])
+            incremental_train_images = train_images[:subset_size]
+            incremental_train_labels = train_labels[:subset_size]
         
             if year < 1970:
                 self.datasets[year][3] = {}
