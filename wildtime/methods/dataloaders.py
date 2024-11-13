@@ -115,6 +115,7 @@ class ProportionalDataLoader:
         raise ValueError("Infinite data loader does not have a defined length.")
 
 
+
 class CombinedInfiniteDataLoader:
     def __init__(self, dataset, split_year=1970, proportion=0.5, weights=None, batch_size=32, num_workers=0, collate_fn=None):
         self.split_year = split_year
@@ -132,7 +133,7 @@ class CombinedInfiniteDataLoader:
         self.pre_1970_loader = InfiniteDataLoader(
             dataset=self.pre_1970_subset, 
             weights=weights, 
-            batch_size=batch_size, 
+            batch_size=batch_size // 2,  # Half batch size for each loader
             num_workers=num_workers, 
             collate_fn=collate_fn
         )
@@ -145,25 +146,31 @@ class CombinedInfiniteDataLoader:
             dataset=self.post_1970_subset, 
             weights=weights, 
             proportion=1.0,  # Already sampled a subset with specified proportion
-            batch_size=batch_size, 
+            batch_size=batch_size // 2,  # Half batch size for each loader
             num_workers=num_workers, 
             collate_fn=collate_fn
         )
 
     def __iter__(self):
-        # Create a combined iterator that alternates between pre_1970_loader and post_1970_loader
+        # Create iterators for each loader
         pre_1970_iter = iter(self.pre_1970_loader)
         post_1970_iter = iter(self.post_1970_loader)
         
         while True:
+            # Get one batch from each loader
             pre_batch = next(pre_1970_iter)
             post_batch = next(post_1970_iter)
-            yield pre_batch, post_batch
+            
+            # Combine the batches by concatenating them along the batch dimension (dim=0)
+            combined_batch = {
+                'images': torch.cat([pre_batch['images'], post_batch['images']], dim=0),
+                'labels': torch.cat([pre_batch['labels'], post_batch['labels']], dim=0)
+            }
+            yield combined_batch
 
     def __len__(self):
         # Return the length of the larger of the two loaders
         return max(len(self.pre_1970_loader), len(self.post_1970_loader))
-
 
 
 '''
