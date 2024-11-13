@@ -1,6 +1,10 @@
 import torch
-from torch.utils.data import DataLoader, WeightedRandomSampler, RandomSampler, BatchSampler, Subset
+from torch.utils.data import DataLoader, WeightedRandomSampler, RandomSampler, BatchSampler, Subset, Dataset, ConcatDataset
 import numpy as np
+from torch.utils.data import  Subset
+
+
+
 
 
 '''
@@ -110,6 +114,55 @@ class ProportionalDataLoader:
     def __len__(self):
         raise ValueError("Infinite data loader does not have a defined length.")
 
+
+class CombinedInfiniteDataLoader:
+    def __init__(self, dataset, split_year=1970, proportion=0.5, weights=None, batch_size=32, num_workers=0, collate_fn=None):
+        self.split_year = split_year
+        self.proportion = proportion
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+        self.collate_fn = collate_fn
+        
+        # Step 1: Get indices for data before and after 1970
+        pre_1970_indices = [i for i, data in enumerate(dataset) if data['year'] < split_year]
+        post_1970_indices = [i for i, data in enumerate(dataset) if data['year'] >= split_year]
+        
+        # Step 2: Create a subset containing all data before 1970
+        self.pre_1970_subset = Subset(dataset, pre_1970_indices)
+        self.pre_1970_loader = InfiniteDataLoader(
+            dataset=self.pre_1970_subset, 
+            weights=weights, 
+            batch_size=batch_size, 
+            num_workers=num_workers, 
+            collate_fn=collate_fn
+        )
+        
+        # Step 3: Create a subset of data after 1970, sampled by proportion
+        subset_size = int(len(post_1970_indices) * proportion)
+        sampled_post_1970_indices = torch.randperm(len(post_1970_indices))[:subset_size]
+        self.post_1970_subset = Subset(dataset, [post_1970_indices[i] for i in sampled_post_1970_indices])
+        self.post_1970_loader = ProportionalDataLoader(
+            dataset=self.post_1970_subset, 
+            weights=weights, 
+            proportion=1.0,  # Already sampled a subset with specified proportion
+            batch_size=batch_size, 
+            num_workers=num_workers, 
+            collate_fn=collate_fn
+        )
+
+    def __iter__(self):
+        # Create a combined iterator that alternates between pre_1970_loader and post_1970_loader
+        pre_1970_iter = iter(self.pre_1970_loader)
+        post_1970_iter = iter(self.post_1970_loader)
+        
+        while True:
+            pre_batch = next(pre_1970_iter)
+            post_batch = next(post_1970_iter)
+            yield pre_batch, post_batch
+
+    def __len__(self):
+        # Return the length of the larger of the two loaders
+        return max(len(self.pre_1970_loader), len(self.post_1970_loader))
 
 
 
