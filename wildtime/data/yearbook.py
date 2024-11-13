@@ -204,12 +204,10 @@ class YearbookBase(Dataset):
             test_images = np.array(images)[test_idxs]
             test_labels = np.array(labels)[test_idxs]
 
-            proportions = [0.2, 0.4, 0.6, 0.8, 1.0]
-            incremental_train_images = []
-            incremental_train_labels = []
+            
 
     
-            subset_size = int(len(train_images) * proportion)
+            subset_size = int(len(train_images) * OOD_PROPORTION)
             incremental_train_images = train_images[:subset_size]
             incremental_train_labels = train_labels[:subset_size]
         
