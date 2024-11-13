@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from sklearn import metrics
 from tdc import Evaluator
 
-from .dataloaders import FastDataLoader, InfiniteDataLoader, ProportionalDataLoader
+from .dataloaders import FastDataLoader, InfiniteDataLoader, ProportionalDataLoader, CombinedInfiniteDataLoader
 from .utils import prepare_data, forward_pass, get_collate_functions
 
 
