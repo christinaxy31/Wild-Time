@@ -77,6 +77,7 @@ class BaseTrainer:
             loss, logits, y = forward_pass(x, y, self.train_dataset, self.network, self.criterion, self.lisa, self.mixup,
                                            self.cut_mix, self.mix_alpha)
             loss_all.append(loss.item())
+            print(f"Step {step + 1}, Loss: {loss.item()}")
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
@@ -84,6 +85,7 @@ class BaseTrainer:
                 if self.scheduler is not None:
                     self.scheduler.step()
                 break
+        print(f"loss_all: {loss_all}")
 
     def train_online(self):
         for i, timestamp in enumerate(self.train_dataset.ENV[:-1]):
