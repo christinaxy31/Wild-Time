@@ -222,18 +222,11 @@ class YearbookBase(Dataset):
             else:
                 
                 self.datasets[year][3] = {}
-                if incremental_train_images:
-                    self.datasets[year][3]['images'] = np.stack(incremental_train_images, axis=0) / 255.0
-                else:
-                    # Assign an empty array with the desired shape (e.g., (0,) or (0, height, width, channels) for images)
-                    self.datasets[year][3]['images'] = np.empty((0,))  # Adjust shape as necessary
+            
+                self.datasets[year][3]['images'] = np.stack(incremental_train_images, axis=0) / 255.0
                 
-                if incremental_train_labels:
-                    self.datasets[year][3]['labels'] = np.array(incremental_train_labels)
-                else:
-                    # Assign an empty array with the desired shape (e.g., (0,) for labels)
-                    self.datasets[year][3]['labels'] = np.empty((0,))
-
+                self.datasets[year][3]['labels'] = np.array(incremental_train_labels)
+                
                     
                 
                 self.datasets[year][5] = {}
