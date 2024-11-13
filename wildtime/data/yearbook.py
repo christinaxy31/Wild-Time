@@ -13,6 +13,9 @@ from torch.utils.data import Dataset
 RAW_DATA_FOLDER = 'faces_aligned_small_mirrored_co_aligned_cropped_cleaned'
 RESOLUTION = 32
 ID_HELD_OUT = 0.1
+OOD_PROPORTION = 0.4
+
+
 
 def preprocess_reduced_train_set(args):
     print(f'Preprocessing reduced train proportion dataset and saving to yearbook_{args.reduced_train_prop}.pkl')
@@ -200,6 +203,15 @@ class YearbookBase(Dataset):
             valid_labels = np.array(labels)[valid_idxs]
             test_images = np.array(images)[test_idxs]
             test_labels = np.array(labels)[test_idxs]
+
+            proportions = [0.2, 0.4, 0.6, 0.8, 1.0]
+            incremental_train_images = []
+            incremental_train_labels = []
+
+    
+            subset_size = int(len(train_images) * proportion)
+            incremental_train_images = train_images[:subset_size])
+            incremental_train_labels = train_labels[:subset_size])
         
             if year < 1970:
                 self.datasets[year][3] = {}
@@ -212,8 +224,8 @@ class YearbookBase(Dataset):
             else:
                 
                 self.datasets[year][3] = {}
-                self.datasets[year][3]['images'] = np.stack(train_images, axis=0) / 255.0
-                self.datasets[year][3]['labels'] = np.array(train_labels)
+                self.datasets[year][3]['images'] = np.stack(incremental_train_images, axis=0) / 255.0
+                self.datasets[year][3]['labels'] = np.array(incremental_train_labels)
                 
                 self.datasets[year][5] = {}
                 self.datasets[year][5]['images'] = np.stack(test_images, axis=0) / 255.0
