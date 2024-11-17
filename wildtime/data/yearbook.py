@@ -179,10 +179,10 @@ class YearbookBase(Dataset):
             self.datasets[year][6]['images'] = copy.deepcopy(self.datasets[year][2]['images']) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
             self.datasets[year][6]['labels'] = copy.deepcopy(self.datasets[year][2]['labels'])
             
-            images = self.datasets[year][6]['images']
-            labels = self.datasets[year][6]['labels']
-            print(len(self.datasets[year][6]['images']))
-            print(len(self.datasets[year][6]['labels']))
+            images = self.datasets[year][2]['images']
+            labels = self.datasets[year][2]['labels']
+            print(len(self.datasets[year][2]['images']))
+            print(len(self.datasets[year][2]['labels']))
             
             num_samples = len(labels)
             num_train_valid_images = int(0.5 * num_samples)  # 50% for train+valid
