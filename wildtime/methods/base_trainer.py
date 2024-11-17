@@ -142,9 +142,11 @@ class BaseTrainer:
                     self.train_dataset.mode = 3
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
+                    '''
                     self.train_dataset.mode = 4
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
+                    '''
                     
                     self.train_dataset.mode = 1
                     self.train_dataset.update_current_timestamp(timestamp)
@@ -155,9 +157,11 @@ class BaseTrainer:
                     self.train_dataset.mode = 3
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
+                    
                     self.train_dataset.mode = 4
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
+                    
                     
                     self.train_dataset.mode = 0
                     self.train_dataset.update_current_timestamp(timestamp)
@@ -181,9 +185,11 @@ class BaseTrainer:
                     self.train_dataset.mode = 3
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
+                    
                     self.train_dataset.mode = 4
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
+                    
                 elif timestamp == self.train_dataset.ENV[-1]:
                     self.train_dataset.mode = 3
                     self.train_dataset.update_current_timestamp(timestamp)
