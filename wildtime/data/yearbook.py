@@ -203,6 +203,10 @@ class YearbookBase(Dataset):
             valid_labels = np.array(labels)[valid_idxs]
             test_images = np.array(images)[test_idxs]
             test_labels = np.array(labels)[test_idxs]
+            print("train number is", len(train_images))
+            print("train_idxs is",train_idxs)
+            
+            
 
             
 
@@ -218,6 +222,10 @@ class YearbookBase(Dataset):
                 self.datasets[year][4] = {}
                 self.datasets[year][4]['images'] = self.datasets[year][1]['images']
                 self.datasets[year][4]['labels'] = self.datasets[year][1]['labels']
+
+                print('before 1970')
+                print('train data number is')
+                print(len(self.datasets[year][3]['labels']))
                 
             else:
                 
@@ -226,6 +234,10 @@ class YearbookBase(Dataset):
                 self.datasets[year][3]['images'] = np.stack(incremental_train_images, axis=0) / 255.0
                 
                 self.datasets[year][3]['labels'] = np.array(incremental_train_labels)
+                print('after 1970')
+                print('train data number is')
+                print(len(self.datasets[year][3]['labels']))
+                
                 
                     
                 
