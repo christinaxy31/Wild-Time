@@ -115,10 +115,12 @@ class BaseTrainer:
                     self.train_dataset.mode = 0
                     self.train_dataset.update_current_timestamp(timestamp)
                     self.train_dataset.update_historical(i + 1)
+                    '''
                     self.train_dataset.mode = 1
                     self.train_dataset.update_current_timestamp(timestamp)
                     #self.train_dataset.update_historical(i + 1, data_del=True)
                     self.train_dataset.update_historical(i + 1)
+                    '''
                 elif timestamp == self.split_time:
                     self.train_dataset.mode = 0
                     self.train_dataset.update_current_timestamp(timestamp)
