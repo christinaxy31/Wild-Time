@@ -165,7 +165,7 @@ class YearbookBase(Dataset):
         self.task_idxs = {}
         start_idx = 0
 
-        np.random.seed(0)
+        np.random.seed(30)
 
         for year in self.ENV:   
             '''
