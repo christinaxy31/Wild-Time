@@ -106,7 +106,7 @@ class BaseTrainer:
                 if self.args.method in ['coral', 'groupdro', 'irm', 'erm']:
                     self.train_dataset.update_historical(i + 1, data_del=True)
 
-    def train_offline(self, incremental_flag = False):
+    def train_offline(self, incremental_flag = True):
         if self.args.method in ['simclr', 'swav']:
             self.train_dataset.ssl_training = True
         for i, timestamp in enumerate(self.train_dataset.ENV):
@@ -292,7 +292,7 @@ class BaseTrainer:
             self.worst_time_accuracies[timestamp] = worst_metric
             self.best_time_accuracies[timestamp] = best_metric
 
-    def evaluate_offline(self, incremental_flag = False):
+    def evaluate_offline(self, incremental_flag = True):
         print(f'\n=================================== Results (Eval-Fix) ===================================')
         print(f'Metric: {self.eval_metric}\n')
         timestamps = self.eval_dataset.ENV
