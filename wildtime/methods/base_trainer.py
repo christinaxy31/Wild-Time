@@ -365,7 +365,7 @@ class BaseTrainer:
                               f'\nOOD Worst Metric: \t{np.min(metrics)}'
                               f'\nAll OOD Metrics: \t{metrics}\n')
                         
-                        '''
+                        
                         print('mode ======== 2')
                         self.eval_dataset.mode = 2
                         self.eval_dataset.update_current_timestamp(timestamp)
@@ -378,7 +378,7 @@ class BaseTrainer:
                         print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
                               f'\nOOD Worst Metric: \t{np.min(metrics)}'
                               f'\nAll OOD Metrics: \t{metrics}\n')
-                        '''
+                        
                     
                         
                     elif timestamp == self.eval_dataset.ENV[-1]:
