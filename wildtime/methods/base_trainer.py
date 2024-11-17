@@ -346,7 +346,7 @@ class BaseTrainer:
                         self.eval_dataset.mode = 4
                         self.eval_dataset.update_current_timestamp(timestamp)
                         self.eval_dataset.update_historical(i + 1)
-                        
+                        print('mode ======== 5')
                         self.eval_dataset.mode = 5
                         self.eval_dataset.update_current_timestamp(timestamp)
                         test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
