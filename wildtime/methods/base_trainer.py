@@ -321,11 +321,11 @@ class BaseTrainer:
                     self.eval_dataset.mode = 1
                     self.eval_dataset.update_current_timestamp(timestamp)
                     self.eval_dataset.update_historical(i + 1)
-                    
+                    '''
                     self.eval_dataset.mode = 4
                     self.eval_dataset.update_current_timestamp(timestamp)
                     self.eval_dataset.update_historical(i + 1)
-                    
+                    '''
                     
                 elif timestamp == self.split_time:
                     
