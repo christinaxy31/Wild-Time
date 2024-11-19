@@ -224,10 +224,11 @@ class BaseTrainer:
                     
 
     def network_evaluation(self, test_time_dataloader):
+        
         self.network.eval()
         pred_all = []
         y_all = []
-        
+        print('self.mode',self.mode)
         for _, sample in enumerate(test_time_dataloader):
             if len(sample) == 3:
                 x, y, _ = sample
@@ -252,7 +253,7 @@ class BaseTrainer:
                 # Print each prediction and true label pair
                 for pred_label, true_label in zip(pred_list, y_list):
                     print(f"Predicted: {pred_label}, True: {true_label}")
-    
+        
         if self.args.dataset == 'drug':
             evaluator = Evaluator(name='PCC')
             metric = evaluator(y_all, pred_all)
