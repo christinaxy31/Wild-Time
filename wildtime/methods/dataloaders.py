@@ -222,7 +222,7 @@ class FastDataLoader:
         super().__init__()
 
         batch_sampler = torch.utils.data.BatchSampler(
-            torch.utils.data.SequentialSampler(dataset, replacement=False),
+            torch.utils.data.SequentialSampler(dataset),
             batch_size=min(batch_size, len(dataset)),
             drop_last=False
         )
