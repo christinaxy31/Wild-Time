@@ -213,6 +213,13 @@ class BaseTrainer:
                     train_ood_dataloader = InfiniteDataLoader(dataset=self.train_dataset, weights=None,
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.train_collate_fn)
+                    for _, sample in enumerate(test_time_dataloader):
+                        if len(sample) == 3:
+                            x, y, _ = sample
+                        else:
+                            x, y = sample
+                        print('here it is')
+                        print(x,y)
                     
                     if self.args.load_model:
                         self.load_model(timestamp)
