@@ -220,6 +220,8 @@ class YearbookBase(Dataset):
                 self.datasets[year][3]['labels'] = np.array(incremental_train_labels)
                 print(f"after 1970, mode = 3, this year {year} train number is", len(self.datasets[year][3]['labels']))
                 print("this year incremental train_idxs is", train_idxs[:subset_size])
+                print("show mode=3 labels")
+                print(self.datasets[year][3]['labels'])
                 
                 self.datasets[year][5] = {}
                 self.datasets[year][5]['images'] = np.stack(test_images, axis=0) / 255.0
