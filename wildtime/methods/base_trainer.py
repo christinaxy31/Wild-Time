@@ -227,21 +227,32 @@ class BaseTrainer:
         self.network.eval()
         pred_all = []
         y_all = []
+        
         for _, sample in enumerate(test_time_dataloader):
             if len(sample) == 3:
                 x, y, _ = sample
             else:
                 x, y = sample
+            
             x, y = prepare_data(x, y, str(self.eval_dataset))
+            
             with torch.no_grad():
                 logits = self.network(x)
                 if self.args.dataset in ['drug']:
                     pred = logits.reshape(-1, )
                 else:
                     pred = F.softmax(logits, dim=1).argmax(dim=1)
-                pred_all = list(pred_all) + pred.detach().cpu().numpy().tolist()
-                y_all = list(y_all) + y.cpu().numpy().tolist()
-
+                
+                # Convert predictions and labels to lists and append
+                pred_list = pred.detach().cpu().numpy().tolist()
+                y_list = y.cpu().numpy().tolist()
+                pred_all += pred_list
+                y_all += y_list
+                
+                # Print each prediction and true label pair
+                for pred_label, true_label in zip(pred_list, y_list):
+                    print(f"Predicted: {pred_label}, True: {true_label}")
+    
         if self.args.dataset == 'drug':
             evaluator = Evaluator(name='PCC')
             metric = evaluator(y_all, pred_all)
@@ -253,9 +264,11 @@ class BaseTrainer:
             else:
                 correct = (pred_all == y_all).sum().item()
                 metric = correct / float(y_all.shape[0])
+        
         self.network.train()
 
-        return metric
+    return metric
+
 
     def evaluate_stream(self, start):
         self.network.eval()
