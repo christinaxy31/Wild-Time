@@ -250,7 +250,7 @@ class BaseTrainer:
                     pred = logits.reshape(-1, )
                 else:
                     pred = F.softmax(logits, dim=1).argmax(dim=1)
-                    print('logits',logits)
+                    #print('logits',logits)
                 
                 # Convert predictions and labels to lists and append
                 pred_list = pred.detach().cpu().numpy().tolist()
