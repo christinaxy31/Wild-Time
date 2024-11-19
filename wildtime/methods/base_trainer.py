@@ -256,6 +256,7 @@ class BaseTrainer:
         if self.args.dataset == 'drug':
             evaluator = Evaluator(name='PCC')
             metric = evaluator(y_all, pred_all)
+            
         else:
             pred_all = np.array(pred_all)
             y_all = np.array(y_all)
@@ -267,7 +268,7 @@ class BaseTrainer:
         
         self.network.train()
 
-    return metric
+        return metric
 
 
     def evaluate_stream(self, start):
