@@ -228,7 +228,7 @@ class BaseTrainer:
         self.network.eval()
         pred_all = []
         y_all = []
-        print('self.mode',self.mode)
+        print('self.mode:',self.dval_dataset.mode)
         for _, sample in enumerate(test_time_dataloader):
             if len(sample) == 3:
                 x, y, _ = sample
