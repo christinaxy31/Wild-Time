@@ -218,8 +218,8 @@ class BaseTrainer:
                             x, y, _ = sample
                         else:
                             x, y = sample
-                        print('here it is')
-                        print(x,y)
+                        #print('here it is')
+                        #print(x,y)
                     
                     if self.args.load_model:
                         self.load_model(timestamp)
