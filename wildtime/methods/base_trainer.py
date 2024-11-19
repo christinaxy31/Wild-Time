@@ -372,7 +372,7 @@ class BaseTrainer:
                         print('mode ======== 5')
                         self.eval_dataset.mode = 5
                         self.eval_dataset.update_current_timestamp(timestamp)
-                        print(f'mode:{self.eval_dataset.mode},datalength:{len(self.eval_dataset}')
+                        print(f'mode:{self.eval_dataset.mode},datalength:{len(self.eval_dataset)}')
                         test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
@@ -387,7 +387,7 @@ class BaseTrainer:
                         print('mode ======== 2')
                         self.eval_dataset.mode = 2
                         self.eval_dataset.update_current_timestamp(timestamp)
-                        print(f'mode:{self.eval_dataset.mode},datalength:{len(self.eval_dataset}')
+                        print(f'mode:{self.eval_dataset.mode},datalength:{len(self.eval_dataset)}')
                         test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
@@ -411,7 +411,7 @@ class BaseTrainer:
 
                         self.eval_dataset.mode = 5
                         self.eval_dataset.update_current_timestamp(timestamp)
-                        print(f'mode:{self.eval_dataset.mode},datalength:{len(self.eval_dataset}')
+                        print(f'mode:{self.eval_dataset.mode},datalength:{len(self.eval_dataset)}')
                         test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
@@ -425,7 +425,7 @@ class BaseTrainer:
                         print('mode ======== 2')
                         self.eval_dataset.mode = 2
                         self.eval_dataset.update_current_timestamp(timestamp)
-                        print(f'mode:{self.eval_dataset.mode},datalength:{len(self.eval_dataset}')
+                        print(f'mode:{self.eval_dataset.mode},datalength:{len(self.eval_dataset)}')
                         test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
