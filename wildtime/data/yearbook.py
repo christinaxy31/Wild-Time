@@ -174,6 +174,9 @@ class YearbookBase(Dataset):
             print(len(self.datasets[year][1]['images']))
             print(len(self.datasets[year][2]['images']))
             '''
+
+
+            
           
             self.datasets[year][6] = {}
             self.datasets[year][6]['images'] = copy.deepcopy(self.datasets[year][2]['images']) # 0.5 of all is assigned to test set, 0.5 of all is assigned to train+valid set
@@ -181,8 +184,8 @@ class YearbookBase(Dataset):
             
             images = self.datasets[year][2]['images']
             labels = self.datasets[year][2]['labels']
-            print(len(self.datasets[year][2]['images']))
-            print(len(self.datasets[year][2]['labels']))
+            #print(len(self.datasets[year][2]['images']))
+            #print(len(self.datasets[year][2]['labels']))
             
             num_samples = len(labels)
             num_train_valid_images = int(0.5 * num_samples)  # 50% for train+valid
@@ -191,10 +194,13 @@ class YearbookBase(Dataset):
             train_valid_idxs = idxs[:num_train_valid_images].astype(int)
             test_idxs = idxs[num_train_valid_images:].astype(int)
             num_valid_images = int(0.1 * num_train_valid_images)  
+            
             print("year",year)
             print("num_train_valid_images",num_train_valid_images)
+            print("num_train",num_train_valid_images - num_valid_images)
             print("num_valid",num_valid_images)
             print("num_samples",num_samples)
+            
             valid_idxs = train_valid_idxs[:num_valid_images]
             train_idxs = train_valid_idxs[num_valid_images:]
             train_images = np.array(images)[train_idxs]
@@ -204,13 +210,10 @@ class YearbookBase(Dataset):
             test_images = np.array(images)[test_idxs]
             test_labels = np.array(labels)[test_idxs]
             
-            print("right half this year train number is", len(train_images))
-            print("right half this year train_idxs is",train_idxs)
+            print("new this year train number is", len(train_images))
+            print("new this year train_idxs is",train_idxs)
             
             
-
-            
-
     
             subset_size = int(len(train_images) * OOD_PROPORTION)
             incremental_train_images = train_images[:subset_size]
@@ -225,7 +228,7 @@ class YearbookBase(Dataset):
                 self.datasets[year][4]['labels'] = self.datasets[year][1]['labels']
 
                 print('before 1970')
-                print('train data number is')
+                print('left half this year train data number is')
                 print(len(self.datasets[year][3]['labels']))
                 
             else:
@@ -238,24 +241,26 @@ class YearbookBase(Dataset):
                 print('after 1970')
                 print('right half this year train data number is')
                 print(len(self.datasets[year][3]['labels']))
-                print('right half this year train indixs is')
-                print("right half this year train_idxs is",train_idxs[:subset_size])
+                print("right half this year incremental train_idxs is",train_idxs[:subset_size])
                 
                     
                 
                 self.datasets[year][5] = {}
                 self.datasets[year][5]['images'] = np.stack(test_images, axis=0) / 255.0
                 self.datasets[year][5]['labels'] = np.array(test_labels)
-                print('test data number is')
+                print('after 1970')
+                print('right half this year test data number is')
                 print(len(self.datasets[year][5]['labels']))
-                print("test_idxs",test_idxs)
-    
+                print("right half this year test is",test_idxs)
+
+                
                 self.datasets[year][4] = {}
                 self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
                 self.datasets[year][4]['labels'] = np.array(valid_labels)
-                print('valid data number is')
+                print('after 1970')
+                print('right half this year valid data number is')
                 print(len(self.datasets[year][4]['labels']))
-                print("test_idxs",valid_idxs)
+                print("right half this year valid is",valid_idxs)
 
         #print(self.datasets.keys())
             
