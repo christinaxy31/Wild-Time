@@ -227,18 +227,18 @@ class YearbookBase(Dataset):
                 self.datasets[year][4]['images'] = self.datasets[year][1]['images']
                 self.datasets[year][4]['labels'] = self.datasets[year][1]['labels']
 
-                print('before 1970')
+                print('before 1970',year)
                 print('left half this year train data number is')
                 print(len(self.datasets[year][3]['labels']))
+                print('left half this year valid data number is')
+                print(len(self.datasets[year][4]['labels']))
                 
             else:
                 
                 self.datasets[year][3] = {}
-            
                 self.datasets[year][3]['images'] = np.stack(incremental_train_images, axis=0) / 255.0
-                
                 self.datasets[year][3]['labels'] = np.array(incremental_train_labels)
-                print('after 1970')
+                print('after 1970',year)
                 print('right half this year train data number is')
                 print(len(self.datasets[year][3]['labels']))
                 print("right half this year incremental train_idxs is",train_idxs[:subset_size])
@@ -248,7 +248,7 @@ class YearbookBase(Dataset):
                 self.datasets[year][5] = {}
                 self.datasets[year][5]['images'] = np.stack(test_images, axis=0) / 255.0
                 self.datasets[year][5]['labels'] = np.array(test_labels)
-                print('after 1970')
+                print('after 1970',year)
                 print('right half this year test data number is')
                 print(len(self.datasets[year][5]['labels']))
                 print("right half this year test is",test_idxs)
@@ -257,7 +257,7 @@ class YearbookBase(Dataset):
                 self.datasets[year][4] = {}
                 self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
                 self.datasets[year][4]['labels'] = np.array(valid_labels)
-                print('after 1970')
+                print('after 1970',year)
                 print('right half this year valid data number is')
                 print(len(self.datasets[year][4]['labels']))
                 print("right half this year valid is",valid_idxs)
