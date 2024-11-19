@@ -220,7 +220,8 @@ class FastDataLoader:
 
     def __init__(self, dataset, batch_size, num_workers, collate_fn=None):
         super().__init__()
-
+        print('lenis')
+        print(len(dataset))
         batch_sampler = torch.utils.data.BatchSampler(
             torch.utils.data.SequentialSampler(dataset),
             batch_size=min(batch_size, len(dataset)),
