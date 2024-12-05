@@ -237,7 +237,7 @@ class YearbookBase(Dataset):
                 self.datasets[year][7]['images'] = np.stack(test_images_another, axis=0) / 255.0
                 self.datasets[year][7]['labels'] = np.array(test_labels_another)
                 print(f"after 1970, mode = 7, this year {year} another test number is", len(self.datasets[year][7]['labels']))
-                print("this year another test_idxs is", test_idxs)
+                print("this year another test_idxs is", test_idxs_another)
         
                 self.datasets[year][4] = {}
                 self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
