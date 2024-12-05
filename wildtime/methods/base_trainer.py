@@ -317,6 +317,7 @@ class BaseTrainer:
         print(f'Metric: {self.eval_metric}\n')
         timestamps = self.eval_dataset.ENV
         metrics = []
+        mode5_metrics = []
         mode7_metrics = []
         for i, timestamp in enumerate(timestamps):
             if not incremental_flag:      
@@ -386,10 +387,10 @@ class BaseTrainer:
                                                              num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
                         acc = self.network_evaluation(test_ood_dataloader)
                         print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
-                        metrics.append(acc)
-                        print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
-                              f'\nOOD Worst Metric: \t{np.min(metrics)}'
-                              f'\nAll OOD Metrics: \t{metrics}\n')
+                        mode5_metrics.append(acc)
+                        print(f'\nmode 5_OOD Average Metric: \t{np.mean(mode5_metrics)}'
+                              f'\nmode 5_OOD Worst Metric: \t{np.min(mode5_metrics)}'
+                              f'\nmode 5_All OOD Metrics: \t{mode5_metrics}\n')
 
                         print('mode ======== 7')
                         self.eval_dataset.mode = 7
@@ -401,9 +402,9 @@ class BaseTrainer:
                         acc = self.network_evaluation(test_ood_dataloader)
                         print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
                         mode7_metrics.append(acc)
-                        print(f'\nOOD Average Metric: \t{np.mean(mode7_metrics)}'
-                              f'\nOOD Worst Metric: \t{np.min(mode7_metrics)}'
-                              f'\nAll OOD Metrics: \t{mode7_metrics}\n')
+                        print(f'\nmode 7_OOD Average Metric: \t{np.mean(mode7_metrics)}'
+                              f'\nmode 7_OOD Worst Metric: \t{np.min(mode7_metrics)}'
+                              f'\nmode 7_All OOD Metrics: \t{mode7_metrics}\n')
                         
                         
                         print('mode ======== 2')
