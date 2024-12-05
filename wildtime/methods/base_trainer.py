@@ -317,6 +317,7 @@ class BaseTrainer:
         print(f'Metric: {self.eval_metric}\n')
         timestamps = self.eval_dataset.ENV
         metrics = []
+        mode7_metrics = []
         for i, timestamp in enumerate(timestamps):
             if not incremental_flag:      
                 if timestamp < self.split_time:
@@ -399,7 +400,7 @@ class BaseTrainer:
                                                              num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
                         acc = self.network_evaluation(test_ood_dataloader)
                         print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
-                        metrics.append(acc)
+                        mode7_metrics.append(acc)
                         print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
                               f'\nOOD Worst Metric: \t{np.min(metrics)}'
                               f'\nAll OOD Metrics: \t{metrics}\n')
