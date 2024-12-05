@@ -401,9 +401,9 @@ class BaseTrainer:
                         acc = self.network_evaluation(test_ood_dataloader)
                         print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
                         mode7_metrics.append(acc)
-                        print(f'\nOOD Average Metric: \t{np.mean(metrics)}'
-                              f'\nOOD Worst Metric: \t{np.min(metrics)}'
-                              f'\nAll OOD Metrics: \t{metrics}\n')
+                        print(f'\nOOD Average Metric: \t{np.mean(mode7_metrics)}'
+                              f'\nOOD Worst Metric: \t{np.min(mode7_metrics)}'
+                              f'\nAll OOD Metrics: \t{mode7_metrics}\n')
                         
                         
                         print('mode ======== 2')
