@@ -181,6 +181,7 @@ class YearbookBase(Dataset):
             num_test_images = num_samples - num_train_valid_images  # Remaining 50% for test
             idxs = np.random.permutation(np.arange(num_samples))
             train_valid_idxs = idxs[:num_train_valid_images].astype(int)
+            test_idxs_another = train_valid_idxs 
             test_idxs = idxs[num_train_valid_images:].astype(int)
             num_valid_images = int(0.1 * num_train_valid_images)  
         
@@ -198,6 +199,8 @@ class YearbookBase(Dataset):
             valid_labels = np.array(labels)[valid_idxs]
             test_images = np.array(images)[test_idxs]
             test_labels = np.array(labels)[test_idxs]
+            test_images_another = np.array(images)[test_idxs_another]
+            test_labels_another = np.array(labels)[test_idxs_another]
         
             subset_size = int(len(train_images) * OOD_PROPORTION)
             incremental_train_images = train_images[:subset_size]
@@ -228,6 +231,13 @@ class YearbookBase(Dataset):
                 self.datasets[year][5]['labels'] = np.array(test_labels)
                 print(f"after 1970, mode = 5, this year {year} test number is", len(self.datasets[year][5]['labels']))
                 print("this year test_idxs is", test_idxs)
+
+
+                self.datasets[year][7] = {}
+                self.datasets[year][7]['images'] = np.stack(test_images_another, axis=0) / 255.0
+                self.datasets[year][7]['labels'] = np.array(test_labels_another)
+                print(f"after 1970, mode = 7, this year {year} another test number is", len(self.datasets[year][7]['labels']))
+                print("this year another test_idxs is", test_idxs)
         
                 self.datasets[year][4] = {}
                 self.datasets[year][4]['images'] = np.stack(valid_images, axis=0) / 255.0
