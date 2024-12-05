@@ -174,14 +174,14 @@ class BaseTrainer:
                                                              batch_size=self.mini_batch_size,
                     
                                                              num_workers=self.num_workers, collate_fn=self.train_collate_fn)
-                    
+                    '''
                     if self.args.load_model:
                         self.load_model(timestamp)
                     else:
                         self.train_step(train_id_dataloader)
                         self.save_model(timestamp)
                     break
-                    
+                    '''
                     
                     
                 
@@ -218,14 +218,14 @@ class BaseTrainer:
                                                              batch_size=self.mini_batch_size,
                                                              num_workers=self.num_workers, collate_fn=self.train_collate_fn)
                     
-                    '''
+                    
                     if self.args.load_model:
                         self.load_model(timestamp)
                     else:
                         self.train_step(train_ood_dataloader)
                         self.save_model(timestamp)
                     break
-                    '''
+                    
 
     def evaluate_offline(self, incremental_flag = True):
         print(f'\n=================================== Results (Eval-Fix) ===================================')
