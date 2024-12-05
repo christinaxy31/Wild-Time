@@ -226,8 +226,7 @@ class BaseTrainer:
                     
                     break
 
-
-     def evaluate_offline(self, incremental_flag = True):
+    def evaluate_offline(self, incremental_flag = True):
         print(f'\n=================================== Results (Eval-Fix) ===================================')
         print(f'Metric: {self.eval_metric}\n')
         timestamps = self.eval_dataset.ENV
