@@ -11,6 +11,8 @@ from tdc import Evaluator
 from .dataloaders import FastDataLoader, InfiniteDataLoader, ProportionalDataLoader, CombinedInfiniteDataLoader
 from .utils import prepare_data, forward_pass, get_collate_functions
 
+from ..data.yearbook import OOD_PROPORTION
+
 
 class BaseTrainer:
     def __init__(self, args, dataset, network, criterion, optimizer, scheduler):
