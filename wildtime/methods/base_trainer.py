@@ -425,7 +425,7 @@ class BaseTrainer:
                 y_all += y_list
                 
                 # Print each prediction and true label pair
-                for pred_label, true_label in zip(pred_list, y_list):
+                #for pred_label, true_label in zip(pred_list, y_list):
                     #print(f"Predicted: {pred_label}, True: {true_label}")
         
         if self.args.dataset == 'drug':
