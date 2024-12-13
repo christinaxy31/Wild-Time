@@ -304,9 +304,9 @@ class BaseTrainer:
                         acc = self.network_evaluation(test_ood_dataloader)
                         print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
                         mode5_metrics.append(acc)
-                        print(f'\nmode 5_OOD Average Metric: \t{np.mean(mode5_metrics)}'
-                              f'\nmode 5_OOD Worst Metric: \t{np.min(mode5_metrics)}'
-                              f'\nmode 5_All OOD Metrics: \t{mode5_metrics}\n')
+                        #print(f'\nmode 5_OOD Average Metric: \t{np.mean(mode5_metrics)}'
+                        #      f'\nmode 5_OOD Worst Metric: \t{np.min(mode5_metrics)}'
+                        #      f'\nmode 5_All OOD Metrics: \t{mode5_metrics}\n')
 
                         print('mode ======== 7')
                         self.eval_dataset.mode = 7
@@ -318,9 +318,9 @@ class BaseTrainer:
                         acc = self.network_evaluation(test_ood_dataloader)
                         print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
                         mode7_metrics.append(acc)
-                        print(f'\nmode 7_OOD Average Metric: \t{np.mean(mode7_metrics)}'
-                              f'\nmode 7_OOD Worst Metric: \t{np.min(mode7_metrics)}'
-                              f'\nmode 7_All OOD Metrics: \t{mode7_metrics}\n')
+                        #print(f'\nmode 7_OOD Average Metric: \t{np.mean(mode7_metrics)}'
+                        #      f'\nmode 7_OOD Worst Metric: \t{np.min(mode7_metrics)}'
+                        #      f'\nmode 7_All OOD Metrics: \t{mode7_metrics}\n')
                         
                         
                         print('mode ======== 2')
@@ -333,9 +333,9 @@ class BaseTrainer:
                         acc = self.network_evaluation(test_ood_dataloader)
                         print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
                         mode2_metrics.append(acc)
-                        print(f'\nmode 2_OOD Average Metric: \t{np.mean(mode2_metrics)}'
-                              f'\nmode 2_OOD Worst Metric: \t{np.min(mode2_metrics)}'
-                              f'\nmode 2_All OOD Metrics: \t{mode2_metrics}\n')
+                        #print(f'\nmode 2_OOD Average Metric: \t{np.mean(mode2_metrics)}'
+                        #      f'\nmode 2_OOD Worst Metric: \t{np.min(mode2_metrics)}'
+                        #      f'\nmode 2_All OOD Metrics: \t{mode2_metrics}\n')
                         
                     
                         
@@ -361,6 +361,19 @@ class BaseTrainer:
                         print(f'\nmode 5_OOD Average Metric: \t{np.mean(mode5_metrics)}'
                               f'\nmode 5_OOD Worst Metric: \t{np.min(mode5_metrics)}'
                               f'\nmode 5_All OOD Metrics: \t{mode5_metrics}\n')
+
+                        self.eval_dataset.mode = 7
+                        self.eval_dataset.update_current_timestamp(timestamp)
+                        print(f'mode:{self.eval_dataset.mode},datalength:{len(self.eval_dataset)}')
+                        test_ood_dataloader = FastDataLoader(dataset=self.eval_dataset,
+                                                             batch_size=self.mini_batch_size,
+                                                             num_workers=self.num_workers, collate_fn=self.eval_collate_fn)
+                        acc = self.network_evaluation(test_ood_dataloader)
+                        print(f'OOD timestamp = {timestamp}: \t {self.eval_metric} is {acc}')
+                        mode7_metrics.append(acc)
+                        print(f'\nmode 7_OOD Average Metric: \t{np.mean(mode7_metrics)}'
+                              f'\nmode 7_OOD Worst Metric: \t{np.min(mode7_metrics)}'
+                              f'\nmode 7_All OOD Metrics: \t{mode7_metrics}\n')
 
                         print('mode ======== 2')
                         self.eval_dataset.mode = 2
