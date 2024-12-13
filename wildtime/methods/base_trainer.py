@@ -416,7 +416,7 @@ class BaseTrainer:
                     pred = logits.reshape(-1, )
                 else:
                     pred = F.softmax(logits, dim=1).argmax(dim=1)
-                    print('logits',logits)
+                    #print('logits',logits)
                 
                 # Convert predictions and labels to lists and append
                 pred_list = pred.detach().cpu().numpy().tolist()
@@ -426,7 +426,7 @@ class BaseTrainer:
                 
                 # Print each prediction and true label pair
                 for pred_label, true_label in zip(pred_list, y_list):
-                    print(f"Predicted: {pred_label}, True: {true_label}")
+                    #print(f"Predicted: {pred_label}, True: {true_label}")
         
         if self.args.dataset == 'drug':
             evaluator = Evaluator(name='PCC')
