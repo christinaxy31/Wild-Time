@@ -13,7 +13,7 @@ from torch.utils.data import Dataset
 RAW_DATA_FOLDER = 'faces_aligned_small_mirrored_co_aligned_cropped_cleaned'
 RESOLUTION = 32
 ID_HELD_OUT = 0.1
-OOD_PROPORTION = 0.7
+OOD_PROPORTION = 0.8
 
 
 
