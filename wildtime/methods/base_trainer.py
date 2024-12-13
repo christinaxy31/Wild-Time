@@ -388,6 +388,12 @@ class BaseTrainer:
                         print(f'\nmode 2_OOD Average Metric: \t{np.mean(mode2_metrics)}'
                               f'\nmode 2_OOD Worst Metric: \t{np.min(mode2_metrics)}'
                               f'\nmode 2_All OOD Metrics: \t{mode2_metrics}\n')
+                        print(f'\nmode 5_OOD Average Metric: \t{np.mean(mode5_metrics)}'
+                              f'\nmode 5_OOD Worst Metric: \t{np.min(mode5_metrics)}'
+                              f'\nmode 5_All OOD Metrics: \t{mode5_metrics}\n')
+                        print(f'\nmode 7_OOD Average Metric: \t{np.mean(mode7_metrics)}'
+                              f'\nmode 7_OOD Worst Metric: \t{np.min(mode7_metrics)}'
+                              f'\nmode 7_All OOD Metrics: \t{mode7_metrics}\n')
                     
                     
                     
