@@ -109,7 +109,7 @@ class BaseTrainer:
                 if self.args.method in ['coral', 'groupdro', 'irm', 'erm']:
                     self.train_dataset.update_historical(i + 1, data_del=True)
 
-    def train_offline(self, incremental_flag = True):
+    def train_offline(self, incremental_flag = False):
         if self.args.method in ['simclr', 'swav']:
             self.train_dataset.ssl_training = True
         for i, timestamp in enumerate(self.train_dataset.ENV):
